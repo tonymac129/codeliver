@@ -4,8 +4,8 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   return (
-    <div className="relative flex-1">
-      <div className="h-[calc(100%-110px)] overflow-auto pr-30 py-5">
+    <div className="flex-1">
+      <div className="h-[calc(100%-110px)] overflow-auto pr-30 py-10">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum sequi
         praesentium, aspernatur dolores delectus ullam quia ipsum. Nesciunt
         voluptate quos est minus veritatis ducimus perferendis dignissimos a!

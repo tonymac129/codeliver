@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaSignOutAlt, FaUser } from "react-icons/fa";
 import { FaGear, FaSun } from "react-icons/fa6";
 import { authClient } from "@/lib/auth-client";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -18,6 +19,7 @@ function User({ user }: { user: UserType }) {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   async function handleSignout() {
     setLoading(true);
@@ -41,6 +43,10 @@ function User({ user }: { user: UserType }) {
       document.removeEventListener("click", clickListener);
     };
   }, []);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   return (
     <div ref={menuRef} className="relative">

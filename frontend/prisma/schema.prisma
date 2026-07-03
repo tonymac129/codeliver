@@ -12,6 +12,12 @@ model User {
   name          String
   email         String
   emailVerified Boolean   @default(false)
+  username      String    @unique @default(uuid())
+  status        String?
+  about         String?
+  pronouns      String?
+  website       String?
+  location      String?
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
