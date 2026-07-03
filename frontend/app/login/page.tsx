@@ -5,7 +5,7 @@ import Form from "@/components/auth/Form";
 
 async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (session) redirect("/profile");
+  if (session) redirect("/chat");
 
   return (
     <div>

@@ -14,6 +14,7 @@ const labelStyles = "flex flex-col gap-y-1 text-gray-300 text-sm";
 function Form() {
   const [signUp, setSignUp] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const [userData, setUserData] = useState<UserType>({
     email: "",
     password: "",
@@ -24,16 +25,38 @@ function Form() {
     e.preventDefault();
     setLoading(true);
     if (signUp) {
-      await authClient.signUp.email({
-        email: userData.email,
-        password: userData.password,
-        name: userData.name,
-      });
+      await authClient.signUp.email(
+        {
+          email: userData.email,
+          password: userData.password,
+          name: userData.name,
+        },
+        {
+          onSuccess: () => {
+            window.location.reload();
+          },
+          onError: (ctx) => {
+            setError(ctx.error.message);
+            setLoading(false);
+          },
+        },
+      );
     } else {
-      await authClient.signIn.email({
-        email: userData.email,
-        password: userData.password,
-      });
+      await authClient.signIn.email(
+        {
+          email: userData.email,
+          password: userData.password,
+        },
+        {
+          onSuccess: () => {
+            window.location.reload();
+          },
+          onError: (ctx) => {
+            setError(ctx.error.message);
+            setLoading(false);
+          },
+        },
+      );
     }
   }
 
@@ -86,8 +109,10 @@ function Form() {
               type="password"
             />
           </label>
+          {error && <div className="text-sm text-red-600">{error}</div>}
           <Btn
             text={loading ? "Loading..." : signUp ? "Sign up" : "Log in"}
+            type="submit"
             primary
           />
         </form>

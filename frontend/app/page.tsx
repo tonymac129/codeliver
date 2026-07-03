@@ -1,11 +1,25 @@
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import Section from "@/components/home/Section";
 import Faq from "@/components/home/Faq";
 import Footer from "@/components/layout/Footer";
 import Btn from "@/components/ui/Btn";
 import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
-  return (
+export default async function Home() {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  return session ? (
+    <div className="flex flex-col py-10 gap-y-3 items-center">
+      <h1 className="text-blue-500 font-extrabold text-2xl">
+        Welcome to Codeliver!
+      </h1>
+      <Link href="/chat" className="text-blue-500 hover:underline">
+        Go to chat
+      </Link>
+    </div>
+  ) : (
     <>
       <div className="flex flex-col items-center gap-y-5 pt-30 pb-10">
         <h1 className="text-6xl text-blue-600 font-extrabold">Codeliver</h1>
