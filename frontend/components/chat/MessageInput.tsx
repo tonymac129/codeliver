@@ -23,7 +23,6 @@ function MessageInput({ name }: { name: string }) {
     e.preventDefault();
     if (message.trim().length > 0) {
       setLoading(true);
-      console.log(message);
       setMessage("");
       setLoading(false);
     }

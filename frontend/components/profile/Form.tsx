@@ -2,11 +2,14 @@
 
 import type { User } from "@/generated/prisma/client";
 import { useState, useEffect } from "react";
+import { FaFaceGrin } from "react-icons/fa6";
 import { editProfile } from "@/app/(user)/profile/actions";
 import Input from "../ui/Input";
 import Image from "next/image";
+import Emoji from "../ui/Emoji";
 import Textarea from "../ui/Textarea";
 import Btn from "../ui/Btn";
+import Status from "./Status";
 
 const labelStyles = "flex flex-col gap-y-1 text-gray-300 text-sm";
 
@@ -65,23 +68,52 @@ function Form({ userData }: { userData: User }) {
               setValue={(username) => setUser({ ...user, username })}
             />
           </label>
-          <label className={labelStyles}>
+          <div className={labelStyles}>
             Status
-            <Input
-              placeholder="Hack clubbing..."
-              value={user.status || ""}
-              setValue={(status) => setUser({ ...user, status })}
-            />
-          </label>
+            <div className="flex bg-gray-900 rounded items-center">
+              <Emoji
+                onselect={(statusEmoji) => setUser({ ...user, statusEmoji })}
+              >
+                <div
+                  className="w-10 h-10 flex items-center justify-center text-lg cursor-pointer pl-4 pr-2 hover:text-yellow-500 hover:-translate-y-0.5 hover:scale-110 transition-all!"
+                  title="Choose emoji"
+                >
+                  {user.statusEmoji ? (
+                    user.statusEmoji
+                  ) : (
+                    <FaFaceGrin size={40} title="Choose emoji" />
+                  )}
+                </div>
+              </Emoji>
+              <Input
+                placeholder="Hack clubbing..."
+                value={user.status || ""}
+                setValue={(status) => setUser({ ...user, status })}
+                styles="bg-transparent pl-2"
+              />
+            </div>
+            <div className="flex flex-wrap gap-x-3 gap-y-2 mt-2">
+              <Status emoji="🟢" text="Available" setUser={setUser} />
+              <Status emoji="🟡" text="AFK" setUser={setUser} />
+              <Status emoji="🔴" text="Do not disturb" setUser={setUser} />
+              <Status emoji="🔥" text="Coding" setUser={setUser} />
+              <Status emoji="🤒" text="Sick" setUser={setUser} />
+              <Status emoji="🔒" text="Locked in" setUser={setUser} />
+              <Status text="Clear" setUser={setUser} />
+            </div>
+          </div>
           {/* TODO: option to select emoji for status */}
         </div>
       </div>
       <label className={labelStyles}>
-        About
+        About ({user.about?.length || 0}/150)
         <Textarea
           placeholder="Just a random person..."
           value={user.about || ""}
-          setValue={(about) => setUser({ ...user, about })}
+          setValue={(about) =>
+            about.length < 151 &&
+            setUser({ ...user, about: about.slice(0, 150) })
+          }
         />
       </label>
       <label className={labelStyles}>

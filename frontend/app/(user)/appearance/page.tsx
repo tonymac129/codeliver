@@ -2,19 +2,17 @@ import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
-import Form from "@/components/profile/Form";
 
 export const metadata: Metadata = {
-  title: "Your Profile | Codeliver",
+  title: "Customize Appearance | Codeliver",
   description:
-    "Customize your own public profile on Codeliver and set online status here.",
+    "Customize Codeliver's themes, appearance, and other personalization settings here!",
   authors: [{ name: "Codeliver", url: "https://codeliver.vercel.app" }],
   openGraph: {
-    title: "Your Profile | Codeliver",
+    title: "Customize Appearance | Codeliver",
     description:
-      "Customize your own public profile on Codeliver and set online status here.",
-    url: "https://codeliver.vercel.app/profile",
+      "Customize Codeliver's themes, appearance, and other personalization settings here!",
+    url: "https://codeliver.vercel.app/appearance",
     siteName: "Codeliver",
     images: [
       {
@@ -30,15 +28,12 @@ export const metadata: Metadata = {
 async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
-  const userData = await prisma.user.findUnique({
-    where: { id: session.user.id },
-  });
-  if (!userData) redirect("/login");
 
   return (
     <div className="flex-1 py-10 overflow-auto">
-      <h1 className="text-3xl text-blue-500 font-extrabold">Your profile</h1>
-      <Form userData={userData} />
+      <h1 className="text-3xl text-blue-500 font-extrabold">
+        Customize appearance
+      </h1>
     </div>
   );
 }

@@ -16,6 +16,12 @@ export async function editProfile(user: User) {
           ...user,
           username: user.username.trim(),
           name: user.name.trim(),
+          website: user.website
+            ? user.website?.includes("https://") ||
+              user.website?.includes("http://")
+              ? user.website
+              : "https://" + user.website
+            : null,
         },
       });
       revalidatePath("/profile");

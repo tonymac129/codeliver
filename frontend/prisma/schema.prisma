@@ -14,6 +14,7 @@ model User {
   emailVerified Boolean   @default(false)
   username      String    @unique @default(uuid())
   status        String?
+  statusEmoji   String?
   about         String?
   pronouns      String?
   website       String?

@@ -1,7 +1,30 @@
+import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Form from "@/components/auth/Form";
+
+export const metadata: Metadata = {
+  title: "Log In | Codeliver",
+  description:
+    "Log in or sign up for an account on Codeliver here with email/password or a social provider!",
+  authors: [{ name: "Codeliver", url: "https://codeliver.vercel.app" }],
+  openGraph: {
+    title: "Log In | Codeliver",
+    description:
+      "Log in or sign up for an account on Codeliver here with email/password or a social provider!",
+    url: "https://codeliver.vercel.app/login",
+    siteName: "Codeliver",
+    images: [
+      {
+        url: "/logo.png",
+        width: 50,
+        height: 50,
+      },
+    ],
+    type: "website",
+  },
+};
 
 async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });

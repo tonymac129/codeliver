@@ -13,7 +13,6 @@ function Provider({ provider, children }: ProviderProps) {
 
   async function handleLogin() {
     setLoading(true);
-    console.log(provider.toLowerCase());
     await authClient.signIn.social({ provider: provider.toLowerCase() });
   }
 

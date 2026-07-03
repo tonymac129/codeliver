@@ -11,6 +11,22 @@ export const metadata: Metadata = {
   title: "Welcome to Codeliver!",
   description:
     "Codeliver: sharing code, chatting, and collaborating made simple.",
+  authors: [{ name: "Codeliver", url: "https://codeliver.vercel.app" }],
+  openGraph: {
+    title: "Welcome to Codeliver!",
+    description:
+      "Codeliver: sharing code, chatting, and collaborating made simple.",
+    url: "https://codeliver.vercel.app",
+    siteName: "Codeliver",
+    images: [
+      {
+        url: "/logo.png",
+        width: 50,
+        height: 50,
+      },
+    ],
+    type: "website",
+  },
 };
 
 export default function RootLayout({

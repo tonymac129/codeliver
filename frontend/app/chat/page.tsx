@@ -1,4 +1,27 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Chat | Codeliver",
+  description:
+    "Browse for channels, check your new messages, and manage your chats on Codeliver here.",
+  authors: [{ name: "Codeliver", url: "https://codeliver.vercel.app" }],
+  openGraph: {
+    title: "Chat | Codeliver",
+    description:
+      "Browse for channels, check your new messages, and manage your chats on Codeliver here.",
+    url: "https://codeliver.vercel.app/chat",
+    siteName: "Codeliver",
+    images: [
+      {
+        url: "/logo.png",
+        width: 50,
+        height: 50,
+      },
+    ],
+    type: "website",
+  },
+};
 
 function Page() {
   return (
