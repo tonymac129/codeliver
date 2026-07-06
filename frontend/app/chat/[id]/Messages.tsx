@@ -1,7 +1,8 @@
 "use client";
 
 import type { MessageType } from "@/types/Chat";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { socket } from "@/lib/socket";
 import Message from "@/components/message/Message";
 import MessageInput from "@/components/chat/MessageInput";
 
@@ -13,6 +14,32 @@ interface MessagesProps {
 
 function Messages({ messages, userId, chatId }: MessagesProps) {
   const [replying, setReplying] = useState<boolean>(false);
+  const [displayedMessages, setDisplayedMessages] =
+    useState<MessageType[]>(messages);
+  const messageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    socket.on("message", (message) => {
+      setDisplayedMessages((prev) => {
+        return [
+          ...prev,
+          {
+            id: "string2",
+            from: "string",
+            message: message,
+            createdAt: new Date(),
+          },
+        ];
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    messageRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  }, [displayedMessages]);
 
   return (
     <>
@@ -26,11 +53,11 @@ function Messages({ messages, userId, chatId }: MessagesProps) {
             this channel.
           </p>
         </div>
-        {messages.map((message, i) => {
+        {displayedMessages.map((message, i) => {
           return (
             <>
               {(i == 0 ||
-                messages[i - 1].createdAt.toLocaleDateString() !==
+                displayedMessages[i - 1].createdAt.toLocaleDateString() !==
                   message.createdAt.toLocaleDateString()) && (
                 <div className="my-5 h-px w-full bg-gray-700 relative flex justify-center items-center">
                   <div className="text-gray-300 bg-gray-950 text-sm absolute w-fit px-5">
@@ -49,6 +76,7 @@ function Messages({ messages, userId, chatId }: MessagesProps) {
             </>
           );
         })}
+        <div ref={messageRef} />
       </div>
       <MessageInput
         name={chatId}

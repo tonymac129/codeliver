@@ -10,9 +10,10 @@ import {
   FaXmark,
 } from "react-icons/fa6";
 import { FaPlusCircle, FaQuoteLeft } from "react-icons/fa";
+import { MdSend } from "react-icons/md";
+import { socket } from "@/lib/socket";
 import Input from "../ui/Input";
 import Btn from "../ui/Btn";
-import { MdSend } from "react-icons/md";
 
 const optionStyles = "rounded cursor-pointer p-1.75 hover:bg-gray-900";
 
@@ -30,6 +31,8 @@ function MessageInput({ name, replying, setReplying }: MessageInputProps) {
     e.preventDefault();
     if (message.trim().length > 0) {
       setLoading(true);
+      socket.emit("message", message);
+      console.log(socket);
       setMessage("");
       setLoading(false);
     }
