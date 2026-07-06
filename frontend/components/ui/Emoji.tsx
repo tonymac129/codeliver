@@ -9,11 +9,18 @@ import Picker from "@emoji-mart/react";
 interface EmojiProps {
   children: React.ReactNode;
   onselect: (emoji: string) => void;
+  below?: boolean;
+  right?: boolean;
 }
 
-function Emoji({ children, onselect }: EmojiProps) {
+function Emoji({ children, onselect, below, right }: EmojiProps) {
   const [open, setOpen] = useState<boolean>(false);
   const emojiRef = useRef<HTMLDivElement>(null);
+
+  function handleSelect(e: EmojiType) {
+    onselect(e.native);
+    setOpen(false);
+  }
 
   useEffect(() => {
     const clickListener = (e: Event) => {
@@ -36,11 +43,15 @@ function Emoji({ children, onselect }: EmojiProps) {
             initial={{ scale: 0, opacity: 0, y: -10 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0, opacity: 0, y: -10 }}
-            className="absolute bg-gray-950 z-50 top-[calc(100%+5px)] origin-[5%_0%] left-0"
+            className={`absolute z-50 ${right ? "right-0" : "left-0"} ${
+              below
+                ? `${right ? "origin-[95%_0%]" : "origin-[5%_0%]"} top-[calc(100%+5px)]`
+                : `${right ? "origin-[95%_100%]" : "origin-[5%_100%]"} bottom-[calc(100%+5px)]`
+            }`}
           >
             <Picker
               data={data}
-              onEmojiSelect={(e: EmojiType) => onselect(e.native)}
+              onEmojiSelect={handleSelect}
               previewPosition="none"
               emojiSize={20}
               maxFrequentRows={3}

@@ -73,6 +73,7 @@ function Form({ userData }: { userData: User }) {
             <div className="flex bg-gray-900 rounded items-center">
               <Emoji
                 onselect={(statusEmoji) => setUser({ ...user, statusEmoji })}
+                below
               >
                 <div
                   className="w-10 h-10 flex items-center justify-center text-lg cursor-pointer pl-4 pr-2 hover:text-yellow-500 hover:-translate-y-0.5 hover:scale-110 transition-all!"

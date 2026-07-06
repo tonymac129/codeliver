@@ -7,6 +7,7 @@ import {
   FaFaceGrin,
   FaItalic,
   FaUnderline,
+  FaXmark,
 } from "react-icons/fa6";
 import { FaPlusCircle, FaQuoteLeft } from "react-icons/fa";
 import Input from "../ui/Input";
@@ -15,7 +16,13 @@ import { MdSend } from "react-icons/md";
 
 const optionStyles = "rounded cursor-pointer p-1.75 hover:bg-gray-900";
 
-function MessageInput({ name }: { name: string }) {
+interface MessageInputProps {
+  name: string;
+  replying: boolean;
+  setReplying: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function MessageInput({ name, replying, setReplying }: MessageInputProps) {
   const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -31,8 +38,22 @@ function MessageInput({ name }: { name: string }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col relative border border-gray-700 rounded py-2 w-[calc(100%-120px)]"
+      className={`flex flex-col relative border border-gray-700 rounded ml-5 py-2 w-[calc(100%-40px)]
+         ${replying && "rounded-t-none!"}`}
     >
+      {replying && (
+        <div className="absolute bottom-full rounded-t bg-gray-900 border border-gray-700 border-b-0 -left-px w-[calc(100%+2px)] text-gray-300 text-sm px-4 py-2">
+          <div className="relative flex items-center">
+            Replying to: *insert person name and message preview here*
+            <FaXmark
+              size={20}
+              className="absolute right-0 cursor-pointer"
+              title="Cancel"
+              onClick={() => setReplying(false)}
+            />
+          </div>
+        </div>
+      )}
       <div className="flex gap-x-2 text-gray-300 px-2">
         <FaPlusCircle
           size={30}
