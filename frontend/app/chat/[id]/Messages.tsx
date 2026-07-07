@@ -19,20 +19,14 @@ function Messages({ messages, userId, chatId }: MessagesProps) {
   const messageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    socket.on("message", (message) => {
-      setDisplayedMessages((prev) => {
-        return [
-          ...prev,
-          {
-            id: "string2",
-            from: "string",
-            message: message,
-            createdAt: new Date(),
-          },
-        ];
-      });
+    socket.on("message", (newMessage: MessageType) => {
+      if (newMessage.chatId === chatId) {
+        setDisplayedMessages((prev) => {
+          return [...prev, newMessage];
+        });
+      }
     });
-  }, []);
+  }, [chatId]);
 
   useEffect(() => {
     messageRef.current?.scrollIntoView({
@@ -55,11 +49,13 @@ function Messages({ messages, userId, chatId }: MessagesProps) {
         </div>
         {displayedMessages.map((message, i) => {
           return (
-            <>
+            <div key={message.id}>
               {(i == 0 ||
-                displayedMessages[i - 1].createdAt.toLocaleDateString() !==
-                  message.createdAt.toLocaleDateString()) && (
-                <div className="my-5 h-px w-full bg-gray-700 relative flex justify-center items-center">
+                new Date(
+                  displayedMessages[i - 1].createdAt,
+                ).toLocaleDateString() !==
+                  new Date(message.createdAt).toLocaleDateString()) && (
+                <div className="my-5 h-px mx-5 bg-gray-700 relative flex justify-center items-center">
                   <div className="text-gray-300 bg-gray-950 text-sm absolute w-fit px-5">
                     {message.createdAt.toLocaleDateString()}
                   </div>
@@ -67,13 +63,12 @@ function Messages({ messages, userId, chatId }: MessagesProps) {
                 </div>
               )}
               <Message
-                key={message.id}
                 message={message}
                 userId={userId}
                 setReplying={setReplying}
                 index={i}
               />
-            </>
+            </div>
           );
         })}
         <div ref={messageRef} />
@@ -82,6 +77,7 @@ function Messages({ messages, userId, chatId }: MessagesProps) {
         name={chatId}
         setReplying={setReplying}
         replying={replying}
+        chatId={chatId}
       />
     </>
   );

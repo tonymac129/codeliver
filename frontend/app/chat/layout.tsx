@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { FaHashtag } from "react-icons/fa6";
 import { MdChat } from "react-icons/md";
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
 const headerStyles =
@@ -12,6 +13,7 @@ const chatStyles = "px-4 py-2 rounded hover:bg-gray-900 text-sm";
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
+  const chats = await prisma.chat.findMany();
 
   return (
     <div className="pl-26 flex h-[calc(100vh-66px)]">
@@ -20,21 +22,17 @@ async function Layout({ children }: { children: React.ReactNode }) {
           <h2 className={headerStyles}>
             <FaHashtag size={17} /> Channels
           </h2>
-          <Link href="/chat/1" className={chatStyles}>
-            Channel 1
-          </Link>
-          <Link href="/chat/2" className={chatStyles}>
-            Channel 2
-          </Link>
-          <Link href="/chat/3" className={chatStyles}>
-            Channel 3
-          </Link>
-          <Link href="/chat/4" className={chatStyles}>
-            Channel 4
-          </Link>
-          <Link href="/chat/5" className={chatStyles}>
-            Channel 5
-          </Link>
+          {chats.map((chat) => {
+            return (
+              <Link
+                key={chat.id}
+                href={`/chat/${chat.id}`}
+                className={chatStyles}
+              >
+                {chat.name}
+              </Link>
+            );
+          })}
         </div>
         <div className="flex flex-col gap-y-1">
           <h2 className={headerStyles}>

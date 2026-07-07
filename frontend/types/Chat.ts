@@ -1,8 +1,10 @@
 export interface MessageType {
   id: string;
-  from: string;
+  userId: string;
   message: string;
+  chatId: string;
   createdAt: Date;
+  updatedAt: Date;
   reactions?: ReactionType[];
 }
 

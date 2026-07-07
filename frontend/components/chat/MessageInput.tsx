@@ -21,9 +21,15 @@ interface MessageInputProps {
   name: string;
   replying: boolean;
   setReplying: React.Dispatch<React.SetStateAction<boolean>>;
+  chatId: string;
 }
 
-function MessageInput({ name, replying, setReplying }: MessageInputProps) {
+function MessageInput({
+  name,
+  replying,
+  setReplying,
+  chatId,
+}: MessageInputProps) {
   const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -31,8 +37,7 @@ function MessageInput({ name, replying, setReplying }: MessageInputProps) {
     e.preventDefault();
     if (message.trim().length > 0) {
       setLoading(true);
-      socket.emit("message", message);
-      console.log(socket);
+      socket.emit("message", message, chatId);
       setMessage("");
       setLoading(false);
     }

@@ -16,7 +16,7 @@ interface MessageProps {
 
 function Message({ message, userId, setReplying, index }: MessageProps) {
   const currentTime = new Date();
-  const created = message.createdAt;
+  const created = new Date(message.createdAt);
 
   return (
     <div className="flex gap-x-3 items-start hover:bg-[#0D111C] py-2 px-5 group relative">
@@ -31,7 +31,7 @@ function Message({ message, userId, setReplying, index }: MessageProps) {
       />
       <div className="flex flex-col gap-y-3">
         <div className="flex gap-x-5 items-center">
-          <h2 className="text-lg font-bold text-white">{message.from}</h2>
+          <h2 className="text-lg font-bold text-white">{message.userId}</h2>
           <div
             className="flex gap-x-1.5 text-xs text-gray-300"
             title={created.toISOString()}

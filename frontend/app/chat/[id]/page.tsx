@@ -1,83 +1,25 @@
-import type { MessageType } from "@/types/Chat";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import Messages from "./Messages";
-
-const messages: MessageType[] = [
-  {
-    id: "string",
-    from: "string",
-    message: "string",
-    createdAt: new Date(),
-    reactions: [
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-    ],
-  },
-  {
-    id: "string2",
-    from: "string",
-    message: "string",
-    createdAt: new Date("7/5/2024 00:10"),
-    reactions: [
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-    ],
-  },
-  {
-    id: "string3",
-    from: "string",
-    message: "string",
-    createdAt: new Date("7/4/2026 00:30"),
-    reactions: [
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-    ],
-  },
-  {
-    id: "string4",
-    from: "string",
-    message: "string",
-    createdAt: new Date(),
-    reactions: [
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-    ],
-  },
-  {
-    id: "string5s",
-    from: "string",
-    message: "string",
-    createdAt: new Date(),
-    reactions: [
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-      { emoji: "😭", reacted: ["123"] },
-    ],
-  },
-];
+import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const session = await auth.api.getSession({ headers: await headers() });
+  const existingChat = await prisma.chat.findUnique({
+    where: { id },
+    include: { messages: true },
+  });
+  if (!existingChat) redirect("/chat");
 
   return (
     <div className="flex-1">
-      <Messages messages={messages} userId={session!.user.id} chatId={id} />
+      <Messages
+        messages={existingChat.messages}
+        userId={session!.user.id}
+        chatId={id}
+      />
     </div>
   );
 }
