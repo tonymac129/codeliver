@@ -25,6 +25,8 @@ model User {
   sessions      Session[]
   accounts      Account[]
   messages      Message[]
+  chats         Chat[]
+  ownedChats    Chat[]    @relation("owner")
 
   @@unique([email])
   @@map("user")
@@ -89,12 +91,17 @@ model Jwks {
 }
 
 model Chat {
-  id          String    @id @default(uuid())
-  name        String
-  description String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  messages    Message[]
+  id              String    @id @default(uuid())
+  name            String    @unique
+  description     String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  messages        Message[]
+  userId          String
+  owner           User      @relation(name: "owner", fields: [userId], references: [id])
+  private         Boolean   @default(false)
+  users           User[]
+  isDirectMessage Boolean   @default(false)
 }
 
 model Message {

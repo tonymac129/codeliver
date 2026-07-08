@@ -5,11 +5,10 @@ import { authClient } from "@/lib/auth-client";
 import { FaGoogle } from "react-icons/fa";
 import { SiGithub } from "react-icons/si";
 import { useState } from "react";
+import { labelStyles } from "@/lib/constants";
 import Provider from "./Provider";
 import Input from "../ui/Input";
 import Btn from "../ui/Btn";
-
-const labelStyles = "flex flex-col gap-y-1 text-gray-300 text-sm";
 
 function Form() {
   const [signUp, setSignUp] = useState<boolean>(false);

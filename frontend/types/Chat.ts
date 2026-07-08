@@ -12,3 +12,9 @@ export interface ReactionType {
   emoji: string;
   reacted: string[];
 }
+
+export interface ChannelType {
+  name: string;
+  description: string;
+  private?: boolean;
+}

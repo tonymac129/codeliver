@@ -1,6 +1,7 @@
 "use client";
 
 import type { MessageType } from "@/types/Chat";
+import type { Chat } from "@/generated/prisma/client";
 import { useState, useEffect, useRef } from "react";
 import { socket } from "@/lib/socket";
 import Message from "@/components/message/Message";
@@ -9,10 +10,10 @@ import MessageInput from "@/components/chat/MessageInput";
 interface MessagesProps {
   messages: MessageType[];
   userId: string;
-  chatId: string;
+  chat: Chat;
 }
 
-function Messages({ messages, userId, chatId }: MessagesProps) {
+function Messages({ messages, userId, chat }: MessagesProps) {
   const [replying, setReplying] = useState<boolean>(false);
   const [displayedMessages, setDisplayedMessages] =
     useState<MessageType[]>(messages);
@@ -20,13 +21,13 @@ function Messages({ messages, userId, chatId }: MessagesProps) {
 
   useEffect(() => {
     socket.on("message", (newMessage: MessageType) => {
-      if (newMessage.chatId === chatId) {
+      if (newMessage.chatId === chat.id) {
         setDisplayedMessages((prev) => {
           return [...prev, newMessage];
         });
       }
     });
-  }, [chatId]);
+  }, [chat.id]);
 
   useEffect(() => {
     messageRef.current?.scrollIntoView({
@@ -38,11 +39,12 @@ function Messages({ messages, userId, chatId }: MessagesProps) {
   return (
     <>
       <div className="h-[calc(100%-110px)] overflow-y-auto pb-10 overflow-x-hidden flex  flex-col gap-y-3">
-        <div className="py-10 flex flex-col gap-y-5 px-5">
+        <div className="py-10 flex flex-col gap-y-1 px-5">
           <h1 className="text-2xl text-blue-500 font-bold">
-            Welcome to *insert channel name here*!
+            Welcome to #{chat.name}!
           </h1>
-          <p className="text-gray-300">
+          <p className="text-gray-300 text-sm">{chat.description}</p>
+          <p className="text-gray-300 text-sm mt-4">
             Congrats, you&apos;ve scrolled up far enough to see the beginning of
             this channel.
           </p>
@@ -74,10 +76,10 @@ function Messages({ messages, userId, chatId }: MessagesProps) {
         <div ref={messageRef} />
       </div>
       <MessageInput
-        name={chatId}
+        name={"#" + chat.name}
         setReplying={setReplying}
         replying={replying}
-        chatId={chatId}
+        chatId={chat.id}
       />
     </>
   );

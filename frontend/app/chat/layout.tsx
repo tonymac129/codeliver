@@ -4,10 +4,11 @@ import { redirect } from "next/navigation";
 import { FaHashtag } from "react-icons/fa6";
 import { MdChat } from "react-icons/md";
 import { prisma } from "@/lib/prisma";
+import Menu from "@/components/chat/Menu";
 import Link from "next/link";
 
 const headerStyles =
-  "text-blue-500 font-bold ml-4 text-lg flex gap-x-3 mb-2 items-center";
+  "text-blue-500 font-bold ml-4 text-lg flex gap-x-3 mb-2 items-center relative group";
 const chatStyles = "px-4 py-2 rounded hover:bg-gray-900 text-sm";
 
 async function Layout({ children }: { children: React.ReactNode }) {
@@ -20,7 +21,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
       <div className="w-70 flex flex-col gap-y-5 border-r-2 border-r-gray-700 py-10 h-full overflow-auto pr-5 text-gray-300">
         <div className="flex flex-col gap-y-1">
           <h2 className={headerStyles}>
-            <FaHashtag size={17} /> Channels
+            <FaHashtag size={17} /> Channels <Menu />
           </h2>
           {chats.map((chat) => {
             return (

@@ -18,7 +18,7 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
       <Messages
         messages={existingChat.messages}
         userId={session!.user.id}
-        chatId={id}
+        chat={existingChat}
       />
     </div>
   );
