@@ -4,6 +4,7 @@ import type { ChannelType } from "@/types/Chat";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function createChannel(channel: ChannelType) {
   try {
@@ -12,6 +13,7 @@ export async function createChannel(channel: ChannelType) {
       const newChannel = await prisma.chat.create({
         data: { ...channel, userId: session.user.id },
       });
+      revalidatePath(`/chat/${newChannel.id}`);
       return { error: null, id: newChannel.id };
     }
   } catch (err) {

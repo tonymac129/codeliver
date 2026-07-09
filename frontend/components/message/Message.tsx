@@ -1,6 +1,6 @@
 "use client";
 
-import type { MessageType } from "@/types/Chat";
+import type { MessageType } from "@/app/chat/[id]/Messages";
 import { MdAddReaction } from "react-icons/md";
 import Reaction from "./Reaction";
 import Emoji from "../ui/Emoji";
@@ -22,7 +22,7 @@ function Message({ message, userId, setReplying, index }: MessageProps) {
     <div className="flex gap-x-3 items-start hover:bg-[#0D111C] py-2 px-5 group relative">
       {/* TODO: Use global context or smth to open sidebar profile panel when clicking on profile image */}
       <Image
-        src={"/avatar.svg"}
+        src={message.user.image || "/avatar.svg"}
         alt="Profile avatar"
         width={50}
         height={50}
@@ -31,7 +31,7 @@ function Message({ message, userId, setReplying, index }: MessageProps) {
       />
       <div className="flex flex-col gap-y-3">
         <div className="flex gap-x-5 items-center">
-          <h2 className="text-lg font-bold text-white">{message.userId}</h2>
+          <h2 className="text-lg font-bold text-white">{message.user.name}</h2>
           <div
             className="flex gap-x-1.5 text-xs text-gray-300"
             title={created.toISOString()}
@@ -39,20 +39,21 @@ function Message({ message, userId, setReplying, index }: MessageProps) {
             {currentTime.toLocaleDateString() !==
               created.toLocaleDateString() && created.toLocaleDateString()}
             <span>
-              {created.getHours() % 12 || "12"}:{created.getMinutes()}{" "}
+              {created.getHours() % 12 || "12"}:
+              {created.getMinutes().toString().padStart(2, "0")}{" "}
               {created.getHours() > 11 ? "PM" : "AM"}
             </span>
           </div>
         </div>
         <div className="text-gray-300">{message.message}</div>
-        {message.reactions && (
+        {message.reactions && message.reactions.length > 0 && (
           <div className="flex gap-2 flex-wrap">
             {message.reactions.map((reaction, i) => {
               return (
                 <Reaction
                   key={i}
                   reaction={reaction}
-                  reacted={reaction.reacted.includes(userId)}
+                  reacted={reaction.users.includes(userId)}
                 />
               );
             })}

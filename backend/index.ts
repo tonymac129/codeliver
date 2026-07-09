@@ -47,11 +47,20 @@ io.use(async (socket, next) => {
 io.on("connection", async (socket) => {
   count++;
   const userData = (await fetchUser(socket.data.user.id))!;
+
+  socket.on("join", (channelId) => {
+    socket.join(`channel:${channelId}`);
+  });
+
+  socket.on("leave", (channelId) => {
+    socket.leave(`channel:${channelId}`);
+  });
+
   socket.on("message", async (message, chatId) => {
     const existingChat = await prisma.chat.upsert({
       where: { id: chatId },
       update: {},
-      create: { id: chatId, name: "test" },
+      create: { id: chatId, userId: userData.id, name: "test" },
     });
     const newMessage = await prisma.message.create({
       data: {
@@ -59,11 +68,12 @@ io.on("connection", async (socket) => {
         userId: userData.id,
         chatId: existingChat.id,
       },
+      include: { user: true, reactions: true },
     });
-    io.emit("message", newMessage);
+    io.to(`channel:${existingChat.id}`).emit("message", newMessage);
   });
-  socket.on("disconnect", (reason) => {
-    console.log(`Connection ${socket.id} closed. reason: ${reason}`);
+
+  socket.on("disconnect", () => {
     count--;
   });
 });

@@ -5,6 +5,7 @@ import { FaHashtag } from "react-icons/fa6";
 import { MdChat } from "react-icons/md";
 import { prisma } from "@/lib/prisma";
 import Menu from "@/components/chat/Menu";
+import Channel from "@/components/chat/Channel";
 import Link from "next/link";
 
 const headerStyles =
@@ -14,7 +15,7 @@ const chatStyles = "px-4 py-2 rounded hover:bg-gray-900 text-sm";
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
-  const chats = await prisma.chat.findMany();
+  const chats = await prisma.chat.findMany({ orderBy: { name: "asc" } });
 
   return (
     <div className="pl-26 flex h-[calc(100vh-66px)]">
@@ -24,15 +25,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
             <FaHashtag size={17} /> Channels <Menu />
           </h2>
           {chats.map((chat) => {
-            return (
-              <Link
-                key={chat.id}
-                href={`/chat/${chat.id}`}
-                className={chatStyles}
-              >
-                {chat.name}
-              </Link>
-            );
+            return <Channel key={chat.id} channel={chat} />;
           })}
         </div>
         <div className="flex flex-col gap-y-1">

@@ -1,11 +1,20 @@
 "use client";
 
-import type { MessageType } from "@/types/Chat";
+import type {
+  Message as MessageT,
+  Reaction,
+  User,
+} from "@/generated/prisma/client";
 import type { Chat } from "@/generated/prisma/client";
 import { useState, useEffect, useRef } from "react";
 import { socket } from "@/lib/socket";
 import Message from "@/components/message/Message";
 import MessageInput from "@/components/chat/MessageInput";
+
+export type MessageType = MessageT & {
+  user: User;
+  reactions?: Reaction[];
+};
 
 interface MessagesProps {
   messages: MessageType[];
@@ -20,13 +29,19 @@ function Messages({ messages, userId, chat }: MessagesProps) {
   const messageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    socket.on("message", (newMessage: MessageType) => {
+    function handleMessage(newMessage: MessageType) {
       if (newMessage.chatId === chat.id) {
         setDisplayedMessages((prev) => {
           return [...prev, newMessage];
         });
       }
-    });
+    }
+    socket.emit("join", chat.id);
+    socket.on("message", handleMessage);
+    return () => {
+      socket.emit("leave", chat.id);
+      socket.off("message", handleMessage);
+    };
   }, [chat.id]);
 
   useEffect(() => {
@@ -59,7 +74,7 @@ function Messages({ messages, userId, chat }: MessagesProps) {
                   new Date(message.createdAt).toLocaleDateString()) && (
                 <div className="my-5 h-px mx-5 bg-gray-700 relative flex justify-center items-center">
                   <div className="text-gray-300 bg-gray-950 text-sm absolute w-fit px-5">
-                    {message.createdAt.toLocaleDateString()}
+                    {new Date(message.createdAt).toLocaleDateString()}
                   </div>
                   hi
                 </div>

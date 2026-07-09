@@ -16,7 +16,7 @@ function Bar({ setReplying, index }: BarProps) {
   return (
     <div
       className="opacity-0 group-hover:opacity-100 transition-opacity! flex gap-x-1 rounded border-2 border-gray-700
-       text-gray-300 p-1 top-0 translate-y-[-50%] bg-[#0D111C] absolute right-30"
+       text-gray-300 p-1 top-0 translate-y-[-50%] bg-[#0D111C] absolute right-5"
     >
       <div
         className="hover:bg-gray-800 rounded"

@@ -103,7 +103,6 @@ function Form({ userData }: { userData: User }) {
               <Status text="Clear" setUser={setUser} />
             </div>
           </div>
-          {/* TODO: option to select emoji for status */}
         </div>
       </div>
       <label className={labelStyles}>

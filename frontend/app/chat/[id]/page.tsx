@@ -9,7 +9,7 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() });
   const existingChat = await prisma.chat.findUnique({
     where: { id },
-    include: { messages: true },
+    include: { messages: { include: { user: true, reactions: true } } },
   });
   if (!existingChat) redirect("/chat");
 
