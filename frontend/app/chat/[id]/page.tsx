@@ -6,6 +6,7 @@ import { FaHashtag, FaLock } from "react-icons/fa";
 import Messages from "./Messages";
 import EditChannel from "@/components/chat/EditChannel";
 import AddUsers from "@/components/chat/AddUsers";
+import LeaveChannel from "@/components/chat/LeaveChannel";
 
 async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -18,6 +19,12 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
     },
   });
   if (!existingChat) redirect("/chat");
+  const cleanChannel = {
+    id: existingChat.id,
+    name: existingChat.name,
+    description: existingChat.description || "",
+    private: existingChat.private,
+  };
 
   return (
     <div className="flex-1">
@@ -43,14 +50,8 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
             channelId={existingChat.id}
             addedUsers={existingChat.users}
           />
-          <EditChannel
-            channel={{
-              id: existingChat.id,
-              name: existingChat.name,
-              description: existingChat.description || "",
-              private: existingChat.private,
-            }}
-          />
+          <EditChannel channel={cleanChannel} />
+          <LeaveChannel channel={cleanChannel} />
         </div>
       </div>
       <Messages

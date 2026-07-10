@@ -20,3 +20,18 @@ export async function addUser(channelId: string, userId: string) {
     console.error("Error: " + err);
   }
 }
+
+export async function leaveChannel(channelId: string) {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (session) {
+      await prisma.chat.update({
+        where: { id: channelId },
+        data: { users: { disconnect: { id: session.user.id } } },
+      });
+      revalidatePath(`/chat/${channelId}`);
+    }
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}

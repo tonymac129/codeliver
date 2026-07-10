@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import Menu from "@/components/chat/Menu";
 import Channel from "@/components/chat/Channel";
 import Link from "next/link";
+import Browse from "@/components/chat/Browse";
 
 const headerStyles =
   "text-blue-500 font-bold ml-4 text-lg flex gap-x-3 mb-2 items-center relative group";
@@ -15,7 +16,10 @@ const chatStyles = "px-4 py-2 rounded hover:bg-gray-900 text-sm";
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
-  const chats = await prisma.chat.findMany({ orderBy: { name: "asc" } });
+  const chats = await prisma.chat.findMany({
+    where: { users: { some: { id: session.user.id } } },
+    orderBy: { name: "asc" },
+  });
 
   return (
     <div className="pl-5 flex h-[calc(100vh-66px)]">
@@ -24,9 +28,16 @@ async function Layout({ children }: { children: React.ReactNode }) {
           <h2 className={headerStyles}>
             <FaHashtag size={17} /> Channels <Menu />
           </h2>
-          {chats.map((chat) => {
-            return <Channel key={chat.id} channel={chat} />;
-          })}
+          {chats.length > 0 ? (
+            chats.map((chat) => {
+              return <Channel key={chat.id} channel={chat} />;
+            })
+          ) : (
+            <div className="text-gray-300 text-center text-sm flex flex-col gap-y-1 items-center py-5">
+              <div>You haven&apos;t joined a channel yet</div>
+              <Browse />
+            </div>
+          )}
         </div>
         <div className="flex flex-col gap-y-1">
           <h2 className={headerStyles}>
