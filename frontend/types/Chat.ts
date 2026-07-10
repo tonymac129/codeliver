@@ -14,6 +14,7 @@ export interface ReactionType {
 }
 
 export interface ChannelType {
+  id?: string;
   name: string;
   description: string;
   private?: boolean;

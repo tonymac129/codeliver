@@ -4,37 +4,52 @@ import type { ChannelType } from "@/types/Chat";
 import { useState } from "react";
 import { labelStyles } from "@/lib/constants";
 import { FaCheck } from "react-icons/fa";
-import { createChannel } from "@/app/chat/actions";
+import { createChannel, editChannel } from "@/app/chat/actions";
 import { useRouter } from "next/navigation";
 import Input from "../ui/Input";
 import Btn from "../ui/Btn";
 import Textarea from "../ui/Textarea";
 
-function CreateChannel({ closeModal }: { closeModal: () => void }) {
+interface CreateChannelProps {
+  closeModal: () => void;
+  existingChannel?: ChannelType;
+}
+
+function CreateChannel({ closeModal, existingChannel }: CreateChannelProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [newChannel, setNewChannel] = useState<ChannelType>({
-    name: "",
-    description: "",
-  });
+  const [newChannel, setNewChannel] = useState<ChannelType>(
+    existingChannel || {
+      name: "",
+      description: "",
+    },
+  );
   const router = useRouter();
 
   async function handleCreate() {
-    setError(null);
-    setLoading(true);
-    const res = await createChannel(newChannel);
-    if (res?.error) {
-      setError(res.error);
-      setLoading(false);
+    if (newChannel.name) {
+      setError(null);
+      setLoading(true);
+      const res = existingChannel
+        ? await editChannel(newChannel)
+        : await createChannel(newChannel);
+      if (res?.error) {
+        setError(res.error);
+        setLoading(false);
+      } else {
+        router.push(`/chat/${res!.id}`);
+        closeModal();
+      }
     } else {
-      router.push(`/chat/${res!.id}`);
-      closeModal();
+      setError("Please enter a channel name");
     }
   }
 
   return (
     <>
-      <h2 className="text-xl text-white font-bold">Create channel</h2>
+      <h2 className="text-xl text-white font-bold">
+        {existingChannel ? "Edit" : "Create"} channel
+      </h2>
       <label className={labelStyles}>
         Name
         <Input
@@ -86,7 +101,7 @@ function CreateChannel({ closeModal }: { closeModal: () => void }) {
       </label>
       {error && <div className="text-red-500 text-sm">{error}</div>}
       <Btn
-        text={loading ? "Loading..." : "Create"}
+        text={loading ? "Loading..." : existingChannel ? "Save" : "Create"}
         onclick={handleCreate}
         styles="w-fit py-1.5"
         primary

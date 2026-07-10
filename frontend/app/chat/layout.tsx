@@ -18,8 +18,8 @@ async function Layout({ children }: { children: React.ReactNode }) {
   const chats = await prisma.chat.findMany({ orderBy: { name: "asc" } });
 
   return (
-    <div className="pl-26 flex h-[calc(100vh-66px)]">
-      <div className="w-70 flex flex-col gap-y-5 border-r-2 border-r-gray-700 py-10 h-full overflow-auto pr-5 text-gray-300">
+    <div className="pl-5 flex h-[calc(100vh-66px)]">
+      <div className="w-70 flex flex-col gap-y-5 border-r-2 border-r-gray-700 py-5 h-full overflow-auto pr-5 text-gray-300">
         <div className="flex flex-col gap-y-1">
           <h2 className={headerStyles}>
             <FaHashtag size={17} /> Channels <Menu />

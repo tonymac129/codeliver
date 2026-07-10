@@ -9,7 +9,7 @@ interface InputProps {
   setValue: (v: string) => void;
   type?: string;
   styles?: string;
-  clear?: boolean;
+  clear?: boolean | (() => void);
 }
 
 function Input({
@@ -25,6 +25,9 @@ function Input({
   function handleClear() {
     setValue("");
     inputRef.current?.focus();
+    if (typeof clear === "function") {
+      clear();
+    }
   }
 
   return (
@@ -42,12 +45,12 @@ function Input({
         ref={inputRef}
         className={`outline-none text-base ${clear ? "w-[calc(100%-20px)]" : "w-full"}`}
       />
-      {clear && value.trim().length > 0 && (
+      {clear && (
         <FaXmark
           size={20}
           title="Clear"
           onClick={handleClear}
-          className="absolute right-2 cursor-pointer"
+          className={`right-2 cursor-pointer ${value.trim().length > 0 ? "absolute" : "hidden"}`}
         />
       )}
     </div>

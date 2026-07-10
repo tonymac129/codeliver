@@ -16,7 +16,9 @@ async function Nav() {
     : null;
 
   return (
-    <nav className="sticky w-full bg-gray-950 z-10 top-0 border-b-2 border-gray-700 flex px-30 py-3 items-center justify-between">
+    <nav
+      className={`sticky w-full bg-gray-950 z-10 top-0 border-b-2 border-gray-700 flex ${session ? "pl-9 pr-5" : "px-30"} py-3 items-center justify-between`}
+    >
       <div className="flex items-center gap-x-10">
         <Link href="/" className="text-2xl font-bold text-blue-500 mr-5">
           Codeliver
