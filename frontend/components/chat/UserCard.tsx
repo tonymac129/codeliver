@@ -1,8 +1,9 @@
 "use client";
 
 import type { User } from "@/generated/prisma/client";
-import { addUser } from "@/app/chat/[id]/actions";
+import { addUser, removeUser } from "@/app/chat/[id]/actions";
 import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
 import Btn from "../ui/Btn";
 import Image from "next/image";
 
@@ -10,15 +11,17 @@ interface UserCardProps {
   channelId: string;
   user: User;
   added?: boolean;
+  isOwner?: boolean;
 }
 
-function UserCard({ channelId, user, added }: UserCardProps) {
+function UserCard({ channelId, user, added, isOwner }: UserCardProps) {
   const [loading, setLoading] = useState<boolean>(false);
+  const { data: session } = authClient.useSession();
 
   async function handleAdd() {
     setLoading(true);
     if (added) {
-      alert("removed (not)"); //TODO: this
+      await removeUser(channelId, user.id); //TODO: adding doesn't update the user menu modal automatically
     } else {
       await addUser(channelId, user.id);
     }
@@ -38,12 +41,22 @@ function UserCard({ channelId, user, added }: UserCardProps) {
         <h2 className="text-white text-lg font-bold">{user.name}</h2>
         <p className="text-gray-300 text-sm">{user.username}</p>
       </div>
-      <Btn
-        text={loading ? "Loading..." : added ? "Remove" : "Add"}
-        styles="right-0 absolute text-sm py-0.5 px-2"
-        onclick={handleAdd}
-        primary={!added}
-      />
+      {(!added || isOwner || session!.user.id === user.id) && (
+        <Btn
+          text={
+            loading
+              ? "Loading..."
+              : added
+                ? session?.user.id === user.id
+                  ? "Leave"
+                  : "Remove"
+                : "Add"
+          }
+          styles="right-0 absolute text-sm py-0.5 px-2"
+          onclick={handleAdd}
+          primary={!added}
+        />
+      )}
     </div>
   );
 }

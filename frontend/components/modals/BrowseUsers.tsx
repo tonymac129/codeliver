@@ -1,20 +1,24 @@
 "use client";
 
 import type { User } from "@/generated/prisma/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Input from "../ui/Input";
 import UserCard from "../chat/UserCard";
 
 interface BrowseUsersProps {
   channelId: string;
   addedUsers: User[];
+  isOwner: boolean;
 }
 
-function BrowseUsers({ channelId, addedUsers }: BrowseUsersProps) {
+function BrowseUsers({ channelId, addedUsers, isOwner }: BrowseUsersProps) {
   const [search, setSearch] = useState<string>("");
   const [searched, setSearched] = useState<boolean>(false);
   const [users, setUsers] = useState<User[]>([]);
   const [displayAdded, setDisplayAdded] = useState<User[]>(addedUsers);
+  const externalUsers = users.filter(
+    (u) => !displayAdded.find((d) => d.id === u.id),
+  );
 
   async function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
@@ -44,6 +48,10 @@ function BrowseUsers({ channelId, addedUsers }: BrowseUsersProps) {
     setSearched(false);
   }
 
+  useEffect(() => {
+    setDisplayAdded(addedUsers);
+  }, [addedUsers]);
+
   return (
     <>
       <h2 className="text-xl text-white font-bold">Browse users</h2>
@@ -59,15 +67,22 @@ function BrowseUsers({ channelId, addedUsers }: BrowseUsersProps) {
       <div className="flex flex-col gap-y-3 border-b-2 border-b-gray-700 pb-5 min-h-50 overflow-auto">
         {displayAdded.map((user) => {
           return (
-            <UserCard key={user.id} channelId={channelId} user={user} added />
+            <UserCard
+              key={user.id}
+              channelId={channelId}
+              user={user}
+              isOwner={isOwner}
+              added
+            />
           );
         })}
       </div>
-      {users.length > 0 ? (
+      {/* TODO: test this with non owner user */}
+      {externalUsers.length > 0 ? (
         <>
           <h2 className="text-gray-300 text-sm">Not in channel</h2>
-          <div className="flex flex-col gap-y-3 max-h-70 overflow-auto">
-            {users.map((user) => {
+          <div className="flex flex-col gap-y-3 min-h-30 max-h-70 overflow-auto">
+            {externalUsers.map((user) => {
               return (
                 <UserCard key={user.id} channelId={channelId} user={user} />
               );

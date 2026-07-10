@@ -13,8 +13,8 @@ function EditChannel({ channel }: { channel: ChannelType }) {
   return (
     <div>
       <FaEdit
-        size={35}
-        className="p-2 rounded cursor-pointer hover:bg-gray-900"
+        size={33}
+        className="p-1.5 rounded cursor-pointer hover:bg-gray-900"
         title="Edit channel"
         onClick={() => setEditing(true)}
       />

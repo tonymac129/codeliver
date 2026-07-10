@@ -10,23 +10,28 @@ import BrowseUsers from "../modals/BrowseUsers";
 interface AddUsersProps {
   channelId: string;
   addedUsers: User[];
+  isOwner: boolean;
 }
 
-function AddUsers({ channelId, addedUsers }: AddUsersProps) {
+function AddUsers({ channelId, addedUsers, isOwner }: AddUsersProps) {
   const [adding, setAdding] = useState<boolean>(false);
 
   return (
     <div>
       <FaUserPlus
-        size={35}
-        className="p-2 rounded cursor-pointer hover:bg-gray-900"
+        size={33}
+        className="p-1.5 rounded cursor-pointer hover:bg-gray-900"
         title="Add users"
         onClick={() => setAdding(true)}
       />
       <AnimatePresence>
         {adding && (
           <Modal closeModal={() => setAdding(false)}>
-            <BrowseUsers channelId={channelId} addedUsers={addedUsers} />
+            <BrowseUsers
+              channelId={channelId}
+              addedUsers={addedUsers}
+              isOwner={isOwner}
+            />
           </Modal>
         )}
       </AnimatePresence>

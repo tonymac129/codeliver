@@ -5,7 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { leaveChannel } from "@/app/chat/[id]/actions";
+import { removeUser } from "@/app/chat/[id]/actions";
 import Modal from "../ui/Modal";
 import Btn from "../ui/Btn";
 
@@ -16,7 +16,7 @@ function LeaveChannel({ channel }: { channel: ChannelType }) {
 
   async function handleLeave() {
     setLoading(true);
-    await leaveChannel(channel.id!);
+    await removeUser(channel.id!);
     setLoading(false);
     setConfirming(false);
     router.push("/chat");
@@ -25,8 +25,8 @@ function LeaveChannel({ channel }: { channel: ChannelType }) {
   return (
     <div>
       <FaSignOutAlt
-        size={35}
-        className="p-2 rounded cursor-pointer hover:bg-gray-900 text-red-500"
+        size={33}
+        className="p-1.5 rounded cursor-pointer hover:bg-gray-900 text-red-500"
         title="Edit channel"
         onClick={() => setConfirming(true)}
       />

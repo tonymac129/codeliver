@@ -19,6 +19,11 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
     },
   });
   if (!existingChat) redirect("/chat");
+  const isUser = existingChat.users.find((u) => u.id === session!.user.id)
+    ? true
+    : false;
+  if (!isUser && existingChat.private) redirect("/chat");
+  const isOwner = existingChat.userId === session!.user.id;
   const cleanChannel = {
     id: existingChat.id,
     name: existingChat.name,
@@ -27,7 +32,7 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
   };
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 flex flex-col pb-3">
       <div className="flex px-5 py-2 border-b border-gray-700 items-center justify-between">
         <div className="flex gap-x-5 items-center">
           <h2 className="text-white font-bold text-lg flex items-center gap-x-2">
@@ -45,19 +50,23 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
             </p>
           )}
         </div>
-        <div className="flex gap-x-3 text-gray-300">
-          <AddUsers
-            channelId={existingChat.id}
-            addedUsers={existingChat.users}
-          />
-          <EditChannel channel={cleanChannel} />
-          <LeaveChannel channel={cleanChannel} />
-        </div>
+        {isUser && (
+          <div className="flex gap-x-3 text-gray-300">
+            <AddUsers
+              channelId={existingChat.id}
+              addedUsers={existingChat.users}
+              isOwner={isOwner}
+            />
+            {isOwner && <EditChannel channel={cleanChannel} />}
+            <LeaveChannel channel={cleanChannel} />
+          </div>
+        )}
       </div>
       <Messages
         messages={existingChat.messages}
         userId={session!.user.id}
         chat={existingChat}
+        isUser={isUser}
       />
     </div>
   );

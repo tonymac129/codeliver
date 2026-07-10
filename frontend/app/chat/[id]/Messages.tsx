@@ -10,6 +10,7 @@ import { useState, useEffect, useRef } from "react";
 import { socket } from "@/lib/socket";
 import Message from "@/components/message/Message";
 import MessageInput from "@/components/chat/MessageInput";
+import Join from "@/components/chat/Join";
 
 export type MessageType = MessageT & {
   user: User;
@@ -20,9 +21,10 @@ interface MessagesProps {
   messages: MessageType[];
   userId: string;
   chat: Chat;
+  isUser: boolean;
 }
 
-function Messages({ messages, userId, chat }: MessagesProps) {
+function Messages({ messages, userId, chat, isUser }: MessagesProps) {
   const [replying, setReplying] = useState<boolean>(false);
   const [displayedMessages, setDisplayedMessages] =
     useState<MessageType[]>(messages);
@@ -53,7 +55,7 @@ function Messages({ messages, userId, chat }: MessagesProps) {
 
   return (
     <>
-      <div className="h-[calc(100%-150px)] overflow-y-auto pb-10 overflow-x-hidden flex  flex-col gap-y-3">
+      <div className="flex-1 dh-[calc(100%-150px)] overflow-y-auto pb-10 overflow-x-hidden flex  flex-col gap-y-3">
         <div className="py-10 flex flex-col gap-y-1 px-5">
           <h1 className="text-2xl text-blue-500 font-bold">
             Welcome to #{chat.name}!
@@ -90,12 +92,22 @@ function Messages({ messages, userId, chat }: MessagesProps) {
         })}
         <div ref={messageRef} />
       </div>
-      <MessageInput
-        name={"#" + chat.name}
-        setReplying={setReplying}
-        replying={replying}
-        chatId={chat.id}
-      />
+      {isUser ? (
+        <MessageInput
+          name={"#" + chat.name}
+          setReplying={setReplying}
+          replying={replying}
+          chatId={chat.id}
+        />
+      ) : (
+        <Join
+          channel={{
+            id: chat.id,
+            name: chat.name,
+            description: chat.description || "",
+          }}
+        />
+      )}
     </>
   );
 }

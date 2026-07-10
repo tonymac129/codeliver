@@ -50,10 +50,12 @@ io.on("connection", async (socket) => {
 
   socket.on("join", (channelId) => {
     socket.join(`channel:${channelId}`);
+    console.log(`User ${userData.name} joined channel ${channelId}`);
   });
 
   socket.on("leave", (channelId) => {
     socket.leave(`channel:${channelId}`);
+    console.log(`User ${userData.name} left channel ${channelId}`);
   });
 
   socket.on("message", async (message, chatId) => {

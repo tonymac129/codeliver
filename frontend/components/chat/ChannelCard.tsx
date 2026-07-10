@@ -2,7 +2,7 @@
 
 import type { ChannelType } from "../modals/BrowseChannels";
 import { FaLock } from "react-icons/fa";
-import { addUser, leaveChannel } from "@/app/chat/[id]/actions";
+import { addUser, removeUser } from "@/app/chat/[id]/actions";
 import { FaHashtag } from "react-icons/fa6";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
@@ -17,7 +17,7 @@ function ChannelCard({ currentChannel }: { currentChannel: ChannelType }) {
     if (session) {
       setLoading(true);
       if (channel.joined) {
-        await leaveChannel(channel.id);
+        await removeUser(channel.id);
       } else {
         await addUser(channel.id, session.user.id);
       }
@@ -27,7 +27,7 @@ function ChannelCard({ currentChannel }: { currentChannel: ChannelType }) {
   }
 
   return (
-    <div className="relative flex items-center gap-x-3 py-2">
+    <div className="relative flex items-center gap-x-3 py-2 group/card">
       {channel.private ? <FaLock size={20} /> : <FaHashtag size={20} />}
       <div className="flex flex-col gap-y-1">
         <h2 className="text-white font-bold text-lg">{channel.name}</h2>
@@ -35,12 +35,19 @@ function ChannelCard({ currentChannel }: { currentChannel: ChannelType }) {
           <p className="text-gray-300 text-sm">{channel.description}</p>
         )}
       </div>
-      <Btn
-        text={loading ? "Loading..." : channel.joined ? "Leave" : "Join"}
-        styles="right-0 absolute text-sm py-0.5 px-2"
-        onclick={handleJoin}
-        primary={!channel.joined}
-      />
+      <div className="flex gap-x-3 absolute right-0">
+        <Btn
+          text="View"
+          styles="opacity-0 group-hover/card:opacity-100 transition-all! text-sm py-0.5 px-2"
+          link={`/chat/${channel.id}`}
+        />
+        <Btn
+          text={loading ? "Loading..." : channel.joined ? "Leave" : "Join"}
+          styles="text-sm py-0.5 px-2"
+          onclick={handleJoin}
+          primary={!channel.joined}
+        />
+      </div>
     </div>
   );
 }
