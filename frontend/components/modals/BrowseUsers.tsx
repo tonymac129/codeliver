@@ -10,6 +10,7 @@ interface BrowseUsersProps {
   addedUsers: User[];
   owner: string;
   isOwner: boolean;
+  isPublic: boolean;
 }
 
 function BrowseUsers({
@@ -17,6 +18,7 @@ function BrowseUsers({
   addedUsers,
   owner,
   isOwner,
+  isPublic,
 }: BrowseUsersProps) {
   const [search, setSearch] = useState<string>("");
   const [searched, setSearched] = useState<boolean>(false);
@@ -91,7 +93,13 @@ function BrowseUsers({
           <div className="flex flex-col gap-y-3 min-h-30 max-h-70 overflow-auto">
             {externalUsers.map((user) => {
               return (
-                <UserCard key={user.id} channelId={channelId} user={user} />
+                <UserCard
+                  key={user.id}
+                  channelId={channelId}
+                  user={user}
+                  isOwner={isOwner}
+                  isPublic={isPublic}
+                />
               );
             })}
           </div>

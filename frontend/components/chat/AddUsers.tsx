@@ -12,9 +12,16 @@ interface AddUsersProps {
   addedUsers: User[];
   owner: string;
   isOwner: boolean;
+  isPublic: boolean;
 }
 
-function AddUsers({ channelId, addedUsers, owner, isOwner }: AddUsersProps) {
+function AddUsers({
+  channelId,
+  addedUsers,
+  owner,
+  isOwner,
+  isPublic,
+}: AddUsersProps) {
   const [adding, setAdding] = useState<boolean>(false);
 
   return (
@@ -33,6 +40,7 @@ function AddUsers({ channelId, addedUsers, owner, isOwner }: AddUsersProps) {
               addedUsers={addedUsers}
               owner={owner}
               isOwner={isOwner}
+              isPublic={isPublic}
             />
           </Modal>
         )}

@@ -9,9 +9,12 @@ export async function addUser(channelId: string, userId: string) {
   try {
     const session = await auth.api.getSession({ headers: await headers() });
     if (session) {
-      //TODO: ensure user has permission for private vs public to add users
+      //TODO: add an admin group so admins can add people not just owners for private channels
       await prisma.chat.update({
-        where: { id: channelId },
+        where: {
+          id: channelId,
+          OR: [{ private: false }, { userId: session.user.id }],
+        },
         data: { users: { connect: { id: userId } } },
       });
       revalidatePath(`/chat/${channelId}`);

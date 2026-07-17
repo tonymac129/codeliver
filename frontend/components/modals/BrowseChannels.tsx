@@ -17,15 +17,13 @@ function BrowseChannels() {
 
   async function searchChannels(e: React.SubmitEvent) {
     e.preventDefault();
-    if (search) {
-      setLoading(true);
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_ROOT_URL}/api/channels?q=${search.trim().toLowerCase()}`,
-      ).then((res) => res.json());
-      setDisplayed(res);
-      setSearched(true);
-      setLoading(false);
-    }
+    setLoading(true);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_ROOT_URL}/api/channels?q=${search.trim().toLowerCase()}`,
+    ).then((res) => res.json());
+    setDisplayed(res);
+    setSearched(true);
+    setLoading(false);
   }
 
   function handleClear() {

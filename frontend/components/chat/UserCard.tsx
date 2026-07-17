@@ -14,16 +14,24 @@ interface UserCardProps {
   added?: boolean;
   isOwner?: boolean;
   owner?: boolean;
+  isPublic?: boolean;
 }
 
-function UserCard({ channelId, user, added, isOwner, owner }: UserCardProps) {
+function UserCard({
+  channelId,
+  user,
+  added,
+  isOwner,
+  owner,
+  isPublic,
+}: UserCardProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const { data: session } = authClient.useSession();
 
   async function handleAdd() {
     setLoading(true);
     if (added) {
-      await removeUser(channelId, user.id); //TODO: adding doesn't update the user menu modal automatically
+      await removeUser(channelId, user.id);
     } else {
       await addUser(channelId, user.id);
     }
@@ -53,7 +61,7 @@ function UserCard({ channelId, user, added, isOwner, owner }: UserCardProps) {
         <p className="text-gray-300 text-xs">{user.username}</p>
       </div>
       {!(isOwner && owner) &&
-        (!added || isOwner || session?.user.id === user.id) && (
+        ((!added && isPublic) || isOwner || session?.user.id === user.id) && (
           <Btn
             text={
               loading

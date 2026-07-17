@@ -41,12 +41,19 @@ function ChannelCard({ currentChannel }: { currentChannel: ChannelType }) {
           styles="opacity-0 group-hover/card:opacity-100 transition-all! text-sm py-0.5 px-2"
           link={`/chat/${channel.id}`}
         />
-        {currentChannel.userId !== session?.user.id && (
+        {currentChannel.userId !== session?.user.id ? (
           <Btn
             text={loading ? "Loading..." : channel.joined ? "Leave" : "Join"}
             styles="text-sm py-0.5 px-2"
             onclick={handleJoin}
             primary={!channel.joined}
+          />
+        ) : (
+          <Btn
+            text={loading ? "Loading..." : "Manage"}
+            styles="text-sm py-0.5 px-2"
+            link={`/chat/${channel.id}`}
+            primary
           />
         )}
       </div>

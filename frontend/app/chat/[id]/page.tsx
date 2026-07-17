@@ -58,6 +58,7 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
               addedUsers={existingChat.users}
               owner={existingChat.userId}
               isOwner={isOwner}
+              isPublic={!existingChat.private}
             />
             {isOwner && <EditChannel channel={cleanChannel} />}
             {isOwner && <Settings channel={cleanChannel} />}
