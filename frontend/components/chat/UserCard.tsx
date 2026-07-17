@@ -6,15 +6,17 @@ import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import Btn from "../ui/Btn";
 import Image from "next/image";
+import { FaCrown } from "react-icons/fa";
 
 interface UserCardProps {
   channelId: string;
   user: User;
   added?: boolean;
   isOwner?: boolean;
+  owner?: boolean;
 }
 
-function UserCard({ channelId, user, added, isOwner }: UserCardProps) {
+function UserCard({ channelId, user, added, isOwner, owner }: UserCardProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const { data: session } = authClient.useSession();
 
@@ -38,25 +40,35 @@ function UserCard({ channelId, user, added, isOwner }: UserCardProps) {
         className="rounded-full"
       />
       <div>
-        <h2 className="text-white text-lg font-bold">{user.name}</h2>
-        <p className="text-gray-300 text-sm">{user.username}</p>
+        <h2 className="text-white text-lg font-bold flex items-center gap-x-3">
+          {user.name}
+          {owner && (
+            <FaCrown
+              size={18}
+              title="Channel owner"
+              className="text-yellow-400"
+            />
+          )}
+        </h2>
+        <p className="text-gray-300 text-xs">{user.username}</p>
       </div>
-      {(!added || isOwner || session!.user.id === user.id) && (
-        <Btn
-          text={
-            loading
-              ? "Loading..."
-              : added
-                ? session?.user.id === user.id
-                  ? "Leave"
-                  : "Remove"
-                : "Add"
-          }
-          styles="right-0 absolute text-sm py-0.5 px-2"
-          onclick={handleAdd}
-          primary={!added}
-        />
-      )}
+      {!(isOwner && owner) &&
+        (!added || isOwner || session?.user.id === user.id) && (
+          <Btn
+            text={
+              loading
+                ? "Loading..."
+                : added
+                  ? session?.user.id === user.id
+                    ? "Leave"
+                    : "Remove"
+                  : "Add"
+            }
+            styles="right-0 absolute text-sm py-0.5 px-2"
+            onclick={handleAdd}
+            primary={!added}
+          />
+        )}
     </div>
   );
 }

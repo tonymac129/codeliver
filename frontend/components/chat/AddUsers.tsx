@@ -10,10 +10,11 @@ import BrowseUsers from "../modals/BrowseUsers";
 interface AddUsersProps {
   channelId: string;
   addedUsers: User[];
+  owner: string;
   isOwner: boolean;
 }
 
-function AddUsers({ channelId, addedUsers, isOwner }: AddUsersProps) {
+function AddUsers({ channelId, addedUsers, owner, isOwner }: AddUsersProps) {
   const [adding, setAdding] = useState<boolean>(false);
 
   return (
@@ -30,6 +31,7 @@ function AddUsers({ channelId, addedUsers, isOwner }: AddUsersProps) {
             <BrowseUsers
               channelId={channelId}
               addedUsers={addedUsers}
+              owner={owner}
               isOwner={isOwner}
             />
           </Modal>

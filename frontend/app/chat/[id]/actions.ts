@@ -30,10 +30,14 @@ export async function removeUser(channelId: string, userId?: string) {
       });
       if (existingChat) {
         if (session.user.id === existingChat.userId) {
-          await prisma.chat.update({
-            where: { id: channelId },
-            data: { users: { disconnect: { id: userId || session.user.id } } },
-          }); //TODO: where does ownership transfer to when owner leaves?
+          if (session.user.id === userId || !userId) {
+            return false;
+          } else {
+            await prisma.chat.update({
+              where: { id: channelId },
+              data: { users: { disconnect: { id: userId } } },
+            });
+          }
         } else if (session.user.id === userId) {
           await prisma.chat.update({
             where: { id: channelId },
@@ -42,6 +46,38 @@ export async function removeUser(channelId: string, userId?: string) {
         }
         revalidatePath(`/chat/${channelId}`);
       }
+    }
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}
+
+export async function deleteChannel(channelId: string) {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (session) {
+      await prisma.chat.delete({
+        where: {
+          id: channelId,
+          userId: session.user.id,
+        },
+      });
+      revalidatePath(`/chat/${channelId}`);
+    }
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}
+
+export async function transferOwnership(channelId: string, userId: string) {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (session && session.user.id !== userId) {
+      await prisma.chat.update({
+        where: { id: channelId, userId: session.user.id },
+        data: { userId: userId },
+      });
+      revalidatePath(`/chat/${channelId}`);
     }
   } catch (err) {
     console.error("Error: " + err);

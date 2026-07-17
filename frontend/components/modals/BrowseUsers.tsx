@@ -8,10 +8,16 @@ import UserCard from "../chat/UserCard";
 interface BrowseUsersProps {
   channelId: string;
   addedUsers: User[];
+  owner: string;
   isOwner: boolean;
 }
 
-function BrowseUsers({ channelId, addedUsers, isOwner }: BrowseUsersProps) {
+function BrowseUsers({
+  channelId,
+  addedUsers,
+  owner,
+  isOwner,
+}: BrowseUsersProps) {
   const [search, setSearch] = useState<string>("");
   const [searched, setSearched] = useState<boolean>(false);
   const [users, setUsers] = useState<User[]>([]);
@@ -72,6 +78,7 @@ function BrowseUsers({ channelId, addedUsers, isOwner }: BrowseUsersProps) {
               channelId={channelId}
               user={user}
               isOwner={isOwner}
+              owner={owner === user.id}
               added
             />
           );

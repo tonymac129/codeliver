@@ -6,20 +6,26 @@ import { FaSignOutAlt } from "react-icons/fa";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { removeUser } from "@/app/chat/[id]/actions";
+import Warning from "../modals/Warning";
 import Modal from "../ui/Modal";
-import Btn from "../ui/Btn";
 
 function LeaveChannel({ channel }: { channel: ChannelType }) {
   const [confirming, setConfirming] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   async function handleLeave() {
     setLoading(true);
-    await removeUser(channel.id!);
+    setError(null);
+    const res = await removeUser(channel.id!);
     setLoading(false);
-    setConfirming(false);
-    router.push("/chat");
+    if (res === false) {
+      setError("Transfer channel ownership first to leave the channel");
+    } else {
+      setConfirming(false);
+      router.push("/chat");
+    }
   }
 
   return (
@@ -33,22 +39,20 @@ function LeaveChannel({ channel }: { channel: ChannelType }) {
       <AnimatePresence>
         {confirming && (
           <Modal closeModal={() => setConfirming(false)}>
-            <h2 className="text-xl text-white font-bold">Leave confirmation</h2>
-            <p>
-              Are you sure you want to leave <b>#{channel.name}</b>?{" "}
-              {channel.private
-                ? "You can only join back by getting invited again."
-                : "You can join back again at any time."}
-            </p>
-            <div className="flex gap-x-3">
-              <Btn
-                text={loading ? "Loading..." : "Leave"}
-                onclick={handleLeave}
-                styles="bg-red-500 hover:bg-red-600"
-                primary
-              />
-              <Btn text="Cancel" onclick={() => setConfirming(false)} />
-            </div>
+            <Warning
+              title="Leave confirmation"
+              loading={loading}
+              confirm={handleLeave}
+              cancel={() => setConfirming(false)}
+            >
+              <p>
+                Are you sure you want to leave <b>#{channel.name}</b>?{" "}
+                {channel.private
+                  ? "You can only join back by getting invited again."
+                  : "You can join back again at any time."}
+              </p>
+              {error && <div className="text-sm text-red-500">{error}</div>}
+            </Warning>
           </Modal>
         )}
       </AnimatePresence>

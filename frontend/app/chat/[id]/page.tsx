@@ -6,6 +6,7 @@ import { FaHashtag, FaLock } from "react-icons/fa";
 import Messages from "./Messages";
 import EditChannel from "@/components/chat/EditChannel";
 import AddUsers from "@/components/chat/AddUsers";
+import Settings from "@/components/chat/Settings";
 import LeaveChannel from "@/components/chat/LeaveChannel";
 
 async function Page({ params }: { params: Promise<{ id: string }> }) {
@@ -55,9 +56,11 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
             <AddUsers
               channelId={existingChat.id}
               addedUsers={existingChat.users}
+              owner={existingChat.userId}
               isOwner={isOwner}
             />
             {isOwner && <EditChannel channel={cleanChannel} />}
+            {isOwner && <Settings channel={cleanChannel} />}
             <LeaveChannel channel={cleanChannel} />
           </div>
         )}
