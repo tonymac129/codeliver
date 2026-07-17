@@ -20,6 +20,6 @@ Codeliever: sharing code, chatting, and collaborating made simple.
 
 ## Contribution
 
-All contribution is welcome!
+All contribution is welcome! Just open a PR and I'll get to it as soon as possible.
 
 <!-- TODO: add API documentation too -->
