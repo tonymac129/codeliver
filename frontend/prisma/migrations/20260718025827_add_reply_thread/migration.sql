@@ -1,0 +1,9 @@
+-- AlterTable
+ALTER TABLE "Message" ADD COLUMN     "replyId" TEXT,
+ADD COLUMN     "threadId" TEXT;
+
+-- AddForeignKey
+ALTER TABLE "Message" ADD CONSTRAINT "Message_replyId_fkey" FOREIGN KEY ("replyId") REFERENCES "Message"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Message" ADD CONSTRAINT "Message_threadId_fkey" FOREIGN KEY ("threadId") REFERENCES "Message"("id") ON DELETE SET NULL ON UPDATE CASCADE;

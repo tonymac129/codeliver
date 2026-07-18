@@ -1,5 +1,6 @@
 "use client";
 
+import type { Message } from "@/generated/prisma/client";
 import { useState } from "react";
 import {
   FaBold,
@@ -19,8 +20,8 @@ const optionStyles = "rounded cursor-pointer p-1.75 hover:bg-gray-900";
 
 interface MessageInputProps {
   name: string;
-  replying: boolean;
-  setReplying: React.Dispatch<React.SetStateAction<boolean>>;
+  replying: Message | null;
+  setReplying: React.Dispatch<React.SetStateAction<Message | null>>;
   chatId: string;
 }
 
@@ -37,9 +38,10 @@ function MessageInput({
     e.preventDefault();
     if (message.trim().length > 0) {
       setLoading(true);
-      socket.emit("message", message, chatId);
+      socket.emit("message", message, chatId, replying?.id);
       setMessage("");
       setLoading(false);
+      setReplying(null);
     }
   }
 
@@ -52,12 +54,14 @@ function MessageInput({
       {replying && (
         <div className="absolute bottom-full rounded-t bg-gray-900 border border-gray-700 border-b-0 -left-px w-[calc(100%+2px)] text-gray-300 text-sm px-4 py-2">
           <div className="relative flex items-center">
-            Replying to: *insert person name and message preview here*
+            Replying to:{" "}
+            {replying.message.slice(0, 50) +
+              (replying.message.length > 50 ? "..." : "")}
             <FaXmark
               size={20}
               className="absolute right-0 cursor-pointer"
               title="Cancel"
-              onClick={() => setReplying(false)}
+              onClick={() => setReplying(null)}
             />
           </div>
         </div>
@@ -96,6 +100,7 @@ function MessageInput({
         value={message}
         setValue={(m) => setMessage(m)}
         styles="bg-transparent w-[calc(100%-100px)]"
+        focused={replying ? true : false}
       />
       {message.trim().length > 0 && (
         <Btn

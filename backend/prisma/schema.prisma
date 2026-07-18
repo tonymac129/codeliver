@@ -105,16 +105,22 @@ model Chat {
 }
 
 model Message {
-  id        String     @id @default(uuid())
-  message   String
-  userId    String
-  user      User       @relation(fields: [userId], references: [id])
-  chatId    String
-  chat      Chat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  edited    Boolean    @default(false)
-  reactions Reaction[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id            String     @id @default(uuid())
+  message       String
+  userId        String
+  user          User       @relation(fields: [userId], references: [id])
+  chatId        String
+  chat          Chat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  edited        Boolean    @default(false)
+  replyId       String?
+  replyMessage  Message?   @relation(name: "reply", fields: [replyId], references: [id])
+  replies       Message[]  @relation(name: "reply")
+  threadId      String?
+  threadMessage Message?   @relation(name: "thread", fields: [threadId], references: [id])
+  threads       Message[]  @relation(name: "thread")
+  reactions     Reaction[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 }
 
 model Reaction {

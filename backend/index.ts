@@ -58,19 +58,25 @@ io.on("connection", async (socket) => {
     console.log(`User ${userData.name} left channel ${channelId}`);
   });
 
-  socket.on("message", async (message, chatId) => {
+  socket.on("message", async (message, chatId, replyId?) => {
     const existingChat = await prisma.chat.upsert({
       where: { id: chatId },
       update: {},
-      create: { id: chatId, userId: userData.id, name: "test" },
+      create: { id: chatId, userId: userData.id, name: "new-channel" },
     });
     const newMessage = await prisma.message.create({
       data: {
         message: message,
         userId: userData.id,
         chatId: existingChat.id,
+        replyId,
       },
-      include: { user: true, reactions: true },
+      include: {
+        user: true,
+        reactions: true,
+        replyMessage: { include: { user: true } },
+        threads: true,
+      },
     });
     io.to(`channel:${existingChat.id}`).emit("message", newMessage);
   });

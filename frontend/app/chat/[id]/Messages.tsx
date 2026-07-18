@@ -15,6 +15,8 @@ import Join from "@/components/chat/Join";
 export type MessageType = MessageT & {
   user: User;
   reactions?: Reaction[];
+  replyMessage?: (MessageT & { user: User }) | null;
+  threads?: MessageT[];
 };
 
 interface MessagesProps {
@@ -25,10 +27,12 @@ interface MessagesProps {
 }
 
 function Messages({ messages, userId, chat, isUser }: MessagesProps) {
-  const [replying, setReplying] = useState<boolean>(false);
+  const [replying, setReplying] = useState<MessageT | null>(null);
+  const [highlighted, setHighlighted] = useState<string | null>(null);
   const [displayedMessages, setDisplayedMessages] =
     useState<MessageType[]>(messages);
   const messageRef = useRef<HTMLDivElement>(null);
+  const highlightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleMessage(newMessage: MessageType) {
@@ -53,9 +57,16 @@ function Messages({ messages, userId, chat, isUser }: MessagesProps) {
     });
   }, [displayedMessages]);
 
+  useEffect(() => {
+    highlightRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }, [highlighted]);
+
   return (
     <>
-      <div className="flex-1 dh-[calc(100%-150px)] overflow-y-auto pb-10 overflow-x-hidden flex  flex-col gap-y-3">
+      <div className="flex-1 dh-[calc(100%-150px)] overflow-y-auto pb-10 overflow-x-hidden flex flex-col">
         <div className="py-10 flex flex-col gap-y-1 px-5">
           <h1 className="text-2xl text-blue-500 font-bold">
             Welcome to #{chat.name}!
@@ -67,18 +78,27 @@ function Messages({ messages, userId, chat, isUser }: MessagesProps) {
           </p>
         </div>
         {displayedMessages.map((message, i) => {
+          const dateString = new Date(message.createdAt).toLocaleDateString();
+
           return (
-            <div key={message.id}>
+            <div
+              key={message.id}
+              ref={highlighted === message.id ? highlightRef : null}
+            >
               {(i == 0 ||
                 new Date(
                   displayedMessages[i - 1].createdAt,
-                ).toLocaleDateString() !==
-                  new Date(message.createdAt).toLocaleDateString()) && (
+                ).toLocaleDateString() !== dateString) && (
                 <div className="my-5 h-px mx-5 bg-gray-700 relative flex justify-center items-center">
                   <div className="text-gray-300 bg-gray-950 text-sm absolute w-fit px-5">
-                    {new Date(message.createdAt).toLocaleDateString()}
+                    {new Date().toLocaleDateString() === dateString
+                      ? "Today"
+                      : new Date(
+                            new Date().getTime() - 86400000,
+                          ).toLocaleDateString() === dateString
+                        ? "Yesterday"
+                        : dateString}
                   </div>
-                  hi
                 </div>
               )}
               <Message
@@ -86,6 +106,17 @@ function Messages({ messages, userId, chat, isUser }: MessagesProps) {
                 userId={userId}
                 setReplying={setReplying}
                 index={i}
+                highlighted={highlighted}
+                setHighlighted={setHighlighted}
+                header={
+                  i === 0 || message.replyId
+                    ? true
+                    : false ||
+                      new Date(message.createdAt).getTime() -
+                        new Date(displayedMessages[i - 1].createdAt).getTime() >
+                        600000 ||
+                      displayedMessages[i - 1].userId !== message.userId
+                }
               />
             </div>
           );

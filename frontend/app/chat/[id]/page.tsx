@@ -15,7 +15,15 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
   const existingChat = await prisma.chat.findUnique({
     where: { id },
     include: {
-      messages: { include: { user: true, reactions: true } },
+      messages: {
+        //TODO: add message buffering on scroll so initially only loads the most recent 50-100 messages
+        include: {
+          user: true,
+          reactions: true,
+          replyMessage: { include: { user: true } },
+          threads: true,
+        },
+      },
       users: true,
     },
   });
