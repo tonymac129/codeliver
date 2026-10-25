@@ -16,7 +16,8 @@ import { socket } from "@/lib/socket";
 import Input from "../ui/Input";
 import Btn from "../ui/Btn";
 
-const optionStyles = "rounded cursor-pointer p-1.75 hover:bg-gray-900";
+const optionStyles =
+  "rounded cursor-pointer p-1.75 hover:bg-gray-300 dark:hover:bg-gray-900";
 
 interface MessageInputProps {
   name: string;
@@ -52,7 +53,7 @@ function MessageInput({
          ${replying && "rounded-t-none!"}`}
     >
       {replying && (
-        <div className="absolute bottom-full rounded-t bg-gray-900 border border-gray-700 border-b-0 -left-px w-[calc(100%+2px)] text-gray-300 text-sm px-4 py-2">
+        <div className="absolute bottom-full rounded-t bg-gray-300 dark:bg-gray-900 border border-gray-700 border-b-0 -left-px w-[calc(100%+2px)] text-gray-700 dark:text-gray-300 text-sm px-4 py-2">
           <div className="relative flex items-center">
             Replying to:{" "}
             {replying.message.slice(0, 50) +
@@ -66,7 +67,7 @@ function MessageInput({
           </div>
         </div>
       )}
-      <div className="flex gap-x-2 text-gray-300 px-2">
+      <div className="flex gap-x-2 text-gray-700 dark:text-gray-300 px-2">
         <FaPlusCircle
           size={30}
           className={optionStyles}
@@ -99,7 +100,7 @@ function MessageInput({
         placeholder={`Message ${name}`}
         value={message}
         setValue={(m) => setMessage(m)}
-        styles="bg-transparent w-[calc(100%-100px)]"
+        styles="bg-transparent! w-[calc(100%-100px)]"
         focused={replying ? true : false}
       />
       {message.trim().length > 0 && (

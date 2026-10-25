@@ -4,7 +4,7 @@ const linkStyles = "text-blue-500 hover:underline";
 
 function Footer() {
   return (
-    <div className="flex flex-col gap-y-10 text-gray-300 text-sm py-15 border-t-2 border-t-gray-700 items-center">
+    <div className="flex flex-col gap-y-10 text-gray-700 dark:text-gray-300 text-sm py-15 border-t-2 border-t-gray-700 items-center">
       <div className="flex gap-x-10">
         <span>&copy; {new Date().getFullYear()} Codeliver</span>
         <span>

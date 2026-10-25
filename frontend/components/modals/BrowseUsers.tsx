@@ -62,7 +62,9 @@ function BrowseUsers({
 
   return (
     <>
-      <h2 className="text-xl text-white font-bold">Browse users</h2>
+      <h2 className="text-xl text-black dark:text-white font-bold">
+        Browse users
+      </h2>
       <form onSubmit={handleSubmit}>
         <Input
           placeholder="Search users"
@@ -89,7 +91,9 @@ function BrowseUsers({
       {/* TODO: test this with non owner user */}
       {externalUsers.length > 0 ? (
         <>
-          <h2 className="text-gray-300 text-sm">Not in channel</h2>
+          <h2 className="text-gray-700 dark:text-gray-300 text-sm">
+            Not in channel
+          </h2>
           <div className="flex flex-col gap-y-3 min-h-30 max-h-70 overflow-auto">
             {externalUsers.map((user) => {
               return (
@@ -105,7 +109,7 @@ function BrowseUsers({
           </div>
         </>
       ) : (
-        <div className="text-center text-gray-300 text-sm py-5">
+        <div className="text-center text-gray-700 dark:text-gray-300 text-sm py-5">
           {searched
             ? "No users found"
             : "Type in the name and press enter to search users!"}

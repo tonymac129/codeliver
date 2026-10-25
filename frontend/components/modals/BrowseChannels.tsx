@@ -33,7 +33,7 @@ function BrowseChannels() {
 
   return (
     <>
-      <h2 className="text-xl text-white font-bold text-left">
+      <h2 className="text-xl text-black dark:text-white font-bold text-left">
         Browse channels
       </h2>
       <form onSubmit={searchChannels}>
@@ -53,7 +53,7 @@ function BrowseChannels() {
           })}
         </div>
       ) : (
-        <div className="text-center text-gray-300 text-sm py-5">
+        <div className="text-center text-gray-700 dark:text-gray-300 text-sm py-5">
           {loading
             ? "Loading..."
             : searched

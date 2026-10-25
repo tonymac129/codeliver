@@ -30,9 +30,13 @@ function ChannelCard({ currentChannel }: { currentChannel: ChannelType }) {
     <div className="relative flex items-center gap-x-3 py-2 group/card">
       {channel.private ? <FaLock size={20} /> : <FaHashtag size={20} />}
       <div className="flex flex-col gap-y-1">
-        <h2 className="text-white font-bold text-lg">{channel.name}</h2>
+        <h2 className="text-black dark:text-white font-bold text-lg">
+          {channel.name}
+        </h2>
         {channel.description && (
-          <p className="text-gray-300 text-sm">{channel.description}</p>
+          <p className="text-gray-700 dark:text-gray-300 text-sm">
+            {channel.description}
+          </p>
         )}
       </div>
       <div className="flex gap-x-3 absolute right-0">

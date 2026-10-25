@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --font-inter: var(--font-inter);
 }
@@ -13,5 +15,5 @@ html {
 }
 
 body {
-  @apply bg-gray-950;
+  @apply bg-gray-200 dark:bg-gray-950;
 }

@@ -23,7 +23,7 @@ export default async function Home() {
     <>
       <div className="flex flex-col items-center gap-y-5 pt-30 pb-10">
         <h1 className="text-6xl text-blue-600 font-extrabold">Codeliver</h1>
-        <p className="text-gray-300 w-[50%] text-center">
+        <p className="text-gray-700 dark:text-gray-300 w-[50%] text-center">
           Sharing code, chatting, and collaborating made easy
         </p>
         <div className="flex gap-x-5">
@@ -43,7 +43,7 @@ export default async function Home() {
                 className="rounded w-full"
               />
             </div>
-            <ul className="text-gray-300 list-disc flex-1">
+            <ul className="text-gray-700 dark:text-gray-300 list-disc flex-1">
               <li>Cool feature 1</li>
               <li>Cool feature 2</li>
               <li>Cool feature 3</li>
@@ -54,7 +54,7 @@ export default async function Home() {
         </Section>
         <Section title="About">
           <div className="flex gap-x-20 py-3 items-center w-full">
-            <p className="text-gray-300 flex-1">
+            <p className="text-gray-700 dark:text-gray-300 flex-1">
               More about Codeliver. Lorem ipsum dolor sit amet consectetur
               adipisicing elit. Eveniet voluptates nam ullam ducimus et, dolorum
               odit, aut blanditiis perferendis quisquam porro. Quod officiis,
@@ -73,7 +73,7 @@ export default async function Home() {
         </Section>
         <Section title="Examples">
           <div className="flex gap-x-20 py-3 items-center w-full">
-            <div className="flex-1 flex flex-col gap-y-3 text-gray-300 items-center">
+            <div className="flex-1 flex flex-col gap-y-3 text-gray-700 dark:text-gray-300 items-center">
               <Image
                 src="/placeholder.png"
                 alt="Placeholder image"
@@ -83,7 +83,7 @@ export default async function Home() {
               />
               Example 1
             </div>
-            <div className="flex-1 flex flex-col gap-y-3 text-gray-300 items-center">
+            <div className="flex-1 flex flex-col gap-y-3 text-gray-700 dark:text-gray-300 items-center">
               <Image
                 src="/placeholder.png"
                 alt="Placeholder image"

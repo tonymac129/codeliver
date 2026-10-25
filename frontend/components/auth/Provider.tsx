@@ -19,7 +19,7 @@ function Provider({ provider, children }: ProviderProps) {
   return (
     <div
       onClick={handleLogin}
-      className="px-4 py-2 cursor-pointer text-gray-300 font-bold bg-gray-900 rounded flex items-center gap-x-4"
+      className="px-4 py-2 cursor-pointer text-gray-700 dark:text-gray-300 font-bold bg-gray-300 dark:bg-gray-900 rounded flex items-center gap-x-4"
     >
       {children}
       {loading ? "Loading..." : <>Sign in with {provider}</>}

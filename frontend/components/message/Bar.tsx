@@ -16,26 +16,32 @@ interface BarProps {
 
 function Bar({ message, setReplying, index }: BarProps) {
   return (
-    <div
-      className="opacity-0 group-hover:opacity-100 transition-opacity! flex gap-x-1 rounded border-2 border-gray-700
-       text-gray-300 p-1 top-0 translate-y-[-50%] bg-[#0D111C] absolute right-5"
-    >
+    <div className="opacity-0 group-hover:opacity-100 transition-opacity! flex gap-x-1 rounded border-2 border-gray-700 text-gray-700 dark:text-gray-300 p-1 top-0 translate-y-[-50%] bg-gray-300 dark:bg-[#0D111C] absolute right-5">
       <div
-        className="hover:bg-gray-800 rounded"
+        className="hover:bg-gray-400 dark:hover:bg-gray-800 rounded"
         title="Reply"
         onClick={() => setReplying(message)}
       >
         <FaReply size={30} className={actionStyles} />
       </div>
       <Emoji onselect={(emoji) => console.log(emoji)} right below={index <= 1}>
-        <div className="hover:bg-gray-800 rounded" title="React">
+        <div
+          className="hover:bg-gray-400 dark:hover:bg-gray-800 rounded"
+          title="React"
+        >
           <FaFaceGrin size={30} className={actionStyles} />
         </div>
       </Emoji>
-      <div className="hover:bg-gray-800 rounded" title="Mark unread">
+      <div
+        className="hover:bg-gray-400 dark:hover:bg-gray-800 rounded"
+        title="Mark unread"
+      >
         <MdMarkChatUnread size={30} className={actionStyles} />
       </div>
-      <div className="hover:bg-gray-800 rounded" title="Forward">
+      <div
+        className="hover:bg-gray-400 dark:hover:bg-gray-800 rounded"
+        title="Forward"
+      >
         <FaReply size={30} className={actionStyles + " rotate-y-180"} />
       </div>
     </div>

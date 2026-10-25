@@ -35,7 +35,7 @@ function Faq() {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <div className="rounded overflow-hidden bg-gray-900 w-full">
+    <div className="rounded overflow-hidden bg-gray-300 dark:bg-gray-900 w-full">
       {questions.map((question) => {
         return (
           <div
@@ -47,7 +47,7 @@ function Faq() {
             }`}
           >
             <div
-              className="px-5 text-gray-300 font-bold cursor-pointer flex items-center gap-x-3"
+              className="px-5 text-gray-700 dark:text-gray-300 font-bold cursor-pointer flex items-center gap-x-3"
               onClick={() => setOpen(open === question.id ? null : question.id)}
             >
               <FaCaretRight
@@ -62,7 +62,7 @@ function Faq() {
                   initial={{ height: 0, paddingTop: 0 }}
                   animate={{ height: "auto", paddingTop: "4px" }}
                   exit={{ height: 0, paddingTop: 0 }}
-                  className="px-5 text-gray-300 overflow-hidden box-content"
+                  className="px-5 text-gray-700 dark:text-gray-300 overflow-hidden box-content"
                 >
                   {question.answer}
                 </motion.p>

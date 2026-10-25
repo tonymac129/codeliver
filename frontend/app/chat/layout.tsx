@@ -11,7 +11,8 @@ import Browse from "@/components/chat/Browse";
 
 const headerStyles =
   "text-blue-500 font-bold ml-4 text-lg flex gap-x-3 mb-2 items-center relative group";
-const chatStyles = "px-4 py-2 rounded hover:bg-gray-900 text-sm";
+const chatStyles =
+  "px-4 py-2 rounded hover:bg-gray-300 dark:hover:bg-gray-900 text-sm";
 
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -23,7 +24,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="pl-5 flex h-[calc(100vh-66px)]">
-      <div className="w-70 flex flex-col gap-y-5 border-r-2 border-r-gray-700 py-5 h-full overflow-auto pr-5 text-gray-300">
+      <div className="w-70 flex flex-col gap-y-5 border-r-2 border-r-gray-700 py-5 h-full overflow-auto pr-5 text-gray-700 dark:text-gray-300">
         <div className="flex flex-col gap-y-1">
           <h2 className={headerStyles}>
             <FaHashtag size={17} /> Channels <Menu />
@@ -33,7 +34,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
               return <Channel key={chat.id} channel={chat} />;
             })
           ) : (
-            <div className="text-gray-300 text-center text-sm flex flex-col gap-y-1 items-center py-5">
+            <div className="text-gray-700 dark:text-gray-300 text-center text-sm flex flex-col gap-y-1 items-center py-5">
               <div>You haven&apos;t joined a channel yet</div>
               <Browse />
             </div>

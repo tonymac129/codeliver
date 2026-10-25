@@ -10,7 +10,7 @@ import BrowseChannels from "../modals/BrowseChannels";
 import Modal from "../ui/Modal";
 
 const optionStyles =
-  "hover:bg-gray-900 cursor-pointer flex px-3 py-2 gap-x-3 items-center text-gray-300";
+  "hover:bg-gray-300 dark:hover:bg-gray-900 cursor-pointer flex px-3 py-2 gap-x-3 items-center text-gray-700 dark:text-gray-300";
 
 function Menu() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -37,10 +37,10 @@ function Menu() {
   return (
     <div
       ref={menuRef}
-      className={`absolute right-0  group-hover:opacity-100 ${!menuOpen && "opacity-0"} text-gray-300 transition-all!`}
+      className={`absolute right-0  group-hover:opacity-100 ${!menuOpen && "opacity-0"} text-gray-700 dark:text-gray-300 transition-all!`}
     >
       <div
-        className="rounded-full hover:bg-gray-900 p-2 cursor-pointer"
+        className="rounded-full hover:bg-gray-300 dark:hover:bg-gray-900 p-2 cursor-pointer"
         onClick={() => setMenuOpen((prev) => !prev)}
       >
         <FaBars size={15} />
@@ -52,7 +52,7 @@ function Menu() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col bg-gray-950 rounded border-2 border-gray-700 absolute top-[calc(100%+5px)] right-0 w-50 text-sm font-normal z-10"
+              className="flex flex-col bg-gray-200 dark:bg-gray-950 rounded border-2 border-gray-700 absolute top-[calc(100%+5px)] right-0 w-50 text-sm font-normal z-10"
             >
               <div onClick={() => setModal("create")} className={optionStyles}>
                 <GrAddCircle size={15} />

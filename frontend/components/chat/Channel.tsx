@@ -12,8 +12,8 @@ function Channel({ channel }: { channel: Chat }) {
     <Link
       key={channel.id}
       href={`/chat/${channel.id}`}
-      className={`px-4 py-2 rounded hover:bg-gray-900 flex items-center gap-x-1 text-sm
-        ${pathname.includes(channel.id) && "bg-gray-900 text-blue-500 font-bold"}`}
+      className={`px-4 py-2 rounded hover:bg-gray-300 dark:hover:bg-gray-900 flex items-center gap-x-1 text-sm
+        ${pathname.includes(channel.id) && "bg-gray-300 dark:bg-gray-900 text-blue-500 font-bold"}`}
     >
       {channel.private ? <FaLock size={17} /> : <FaHashtag size={17} />}
       {channel.name}

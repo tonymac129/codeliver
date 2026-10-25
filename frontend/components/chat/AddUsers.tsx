@@ -28,7 +28,7 @@ function AddUsers({
     <div>
       <FaUserPlus
         size={33}
-        className="p-1.5 rounded cursor-pointer hover:bg-gray-900"
+        className="p-1.5 rounded cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-900"
         title="Add users"
         onClick={() => setAdding(true)}
       />

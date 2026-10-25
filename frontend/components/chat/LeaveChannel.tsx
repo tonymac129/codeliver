@@ -32,8 +32,8 @@ function LeaveChannel({ channel }: { channel: ChannelType }) {
     <div>
       <FaSignOutAlt
         size={33}
-        className="p-1.5 rounded cursor-pointer hover:bg-gray-900 text-red-500"
-        title="Edit channel"
+        className="p-1.5 rounded cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-900 text-red-500"
+        title="Leave channel"
         onClick={() => setConfirming(true)}
       />
       <AnimatePresence>

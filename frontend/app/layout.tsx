@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import SocketProvider from "@/components/SocketProvider";
 import Nav from "@/components/layout/Nav";
 import "./globals.css";
@@ -36,12 +37,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${inter.variable} h-full antialiased`}
+      suppressContentEditableWarning
+    >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        <SocketProvider>
-          <Nav />
-          {children}
-        </SocketProvider>
+        <ThemeProvider attribute="class">
+          <SocketProvider>
+            <Nav />
+            {children}
+          </SocketProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

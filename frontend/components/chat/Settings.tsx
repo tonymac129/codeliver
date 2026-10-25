@@ -14,7 +14,7 @@ function Settings({ channel }: { channel: ChannelType }) {
     <div>
       <FaGear
         size={33}
-        className="p-1.5 rounded cursor-pointer hover:bg-gray-900"
+        className="p-1.5 rounded cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-900"
         title="Channel settings"
         onClick={() => setModalOpen(true)}
       />

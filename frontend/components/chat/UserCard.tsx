@@ -3,10 +3,10 @@
 import type { User } from "@/generated/prisma/client";
 import { addUser, removeUser } from "@/app/chat/[id]/actions";
 import { useState } from "react";
+import { FaCrown } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
 import Btn from "../ui/Btn";
 import Image from "next/image";
-import { FaCrown } from "react-icons/fa";
 
 interface UserCardProps {
   channelId: string;
@@ -48,7 +48,7 @@ function UserCard({
         className="rounded-full"
       />
       <div>
-        <h2 className="text-white text-lg font-bold flex items-center gap-x-3">
+        <h2 className="text-black dark:text-white text-lg font-bold flex items-center gap-x-3">
           {user.name}
           {owner && (
             <FaCrown
@@ -58,7 +58,9 @@ function UserCard({
             />
           )}
         </h2>
-        <p className="text-gray-300 text-xs">{user.username}</p>
+        <p className="text-gray-700 dark:text-gray-300 text-xs">
+          {user.username}
+        </p>
       </div>
       {!(isOwner && owner) &&
         ((!added && isPublic) || isOwner || session?.user.id === user.id) && (

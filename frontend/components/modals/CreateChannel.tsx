@@ -47,7 +47,7 @@ function CreateChannel({ closeModal, existingChannel }: CreateChannelProps) {
 
   return (
     <>
-      <h2 className="text-xl text-white font-bold">
+      <h2 className="text-xl text-black dark:text-white font-bold">
         {existingChannel ? "Edit" : "Create"} channel
       </h2>
       <label className={labelStyles}>
@@ -86,10 +86,10 @@ function CreateChannel({ closeModal, existingChannel }: CreateChannelProps) {
           className="hidden"
         />
         <div
-          className={`${newChannel.private ? "bg-blue-950" : "bg-gray-900"} h-6 rounded-full relative px-1 flex items-center w-11`}
+          className={`${newChannel.private ? "bg-blue-200 dark:bg-blue-950" : "bg-gray-300 dark:bg-gray-900"} h-6 rounded-full relative px-1 flex items-center w-11`}
         >
           <div
-            className={`${newChannel.private ? "bg-blue-500 translate-x-5" : "bg-gray-700"} w-4 h-4 rounded-full transition-all! flex items-center justify-center`}
+            className={`${newChannel.private ? "bg-blue-500 translate-x-5" : "bg-gray-700"} w-4 h-4 rounded-full transition-all! flex items-center justify-center text-black dark:text-white`}
           >
             <FaCheck
               size={11}

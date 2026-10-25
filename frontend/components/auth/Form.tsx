@@ -63,13 +63,13 @@ function Form() {
     <div className="border-2 border-gray-700 rounded overflow-hidden w-100 mx-auto">
       <div className="flex">
         <div
-          className={`flex-1 text-gray-300 py-2 text-center cursor-pointer border-b-gray-700 ${signUp ? "border-b-2" : ""}`}
+          className={`flex-1 text-gray-700 dark:text-gray-300 py-2 text-center cursor-pointer border-b-gray-700 ${signUp ? "border-b-2" : ""}`}
           onClick={() => setSignUp(false)}
         >
           Log in
         </div>
         <div
-          className={`flex-1 text-gray-300 py-2 text-center cursor-pointer border-gray-700 
+          className={`flex-1 text-gray-700 dark:text-gray-300 py-2 text-center cursor-pointer border-gray-700 
             border-l-2 ${signUp ? "" : "border-b-2"}`}
           onClick={() => setSignUp(true)}
         >
@@ -116,7 +116,7 @@ function Form() {
           />
         </form>
         <div className="h-0.75 rounded-full bg-gray-700 relative flex items-center justify-center">
-          <div className="px-6 py-2 text-gray-300 text-sm absolute bg-gray-950">
+          <div className="px-6 py-2 text-gray-700 dark:text-gray-300 text-sm absolute bg-gray-200 dark:bg-gray-950">
             or
           </div>
         </div>

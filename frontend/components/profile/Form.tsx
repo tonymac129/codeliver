@@ -11,7 +11,8 @@ import Textarea from "../ui/Textarea";
 import Btn from "../ui/Btn";
 import Status from "./Status";
 
-const labelStyles = "flex flex-col gap-y-1 text-gray-300 text-sm";
+const labelStyles =
+  "flex flex-col gap-y-1 text-gray-700 dark:text-gray-300 text-sm";
 
 function Form({ userData }: { userData: User }) {
   const [user, setUser] = useState<User>(userData);
@@ -37,7 +38,7 @@ function Form({ userData }: { userData: User }) {
   return (
     <div className="flex flex-col gap-y-5 py-10 w-160">
       <div className="flex gap-x-15">
-        <div className="flex flex-col gap-y-3 items-center text-gray-300 text-sm text-center">
+        <div className="flex flex-col gap-y-3 items-center text-gray-700 dark:text-gray-300 text-sm text-center">
           <Image
             src={userData.image || "/avatar.svg"}
             alt="Avatar"
@@ -70,7 +71,7 @@ function Form({ userData }: { userData: User }) {
           </label>
           <div className={labelStyles}>
             Status
-            <div className="flex bg-gray-900 rounded items-center">
+            <div className="flex bg-gray-300 dark:bg-gray-900 rounded items-center">
               <Emoji
                 onselect={(statusEmoji) => setUser({ ...user, statusEmoji })}
                 below

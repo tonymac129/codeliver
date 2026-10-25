@@ -5,11 +5,11 @@ import Link from "next/link";
 function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="pl-26 flex h-[calc(100vh-66px)] gap-x-10">
-      <div className="w-70 flex flex-col gap-y-5 border-r-2 border-r-gray-700 py-10 h-full overflow-auto pr-5 text-gray-300">
+      <div className="w-70 flex flex-col gap-y-5 border-r-2 border-r-gray-700 py-10 h-full overflow-auto pr-5 text-gray-700 dark:text-gray-300">
         <div className="flex flex-col gap-y-1">
           <Link
             href="/chat"
-            className="flex items-center relative gap-x-3 px-4 py-2 hover:bg-gray-900 rounded mb-2"
+            className="flex items-center relative gap-x-3 px-4 py-2 hover:bg-gray-300 dark:hover:bg-gray-900 rounded mb-2"
           >
             <FaChevronLeft size={17} /> Chat
           </Link>

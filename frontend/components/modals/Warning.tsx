@@ -13,7 +13,7 @@ interface WarningProps {
 function Warning({ children, title, loading, confirm, cancel }: WarningProps) {
   return (
     <>
-      <h2 className="text-xl text-white font-bold">{title}</h2>
+      <h2 className="text-xl text-black dark:text-white font-bold">{title}</h2>
       {children}
       <div className="flex gap-x-3">
         <Btn

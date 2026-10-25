@@ -71,8 +71,10 @@ function Messages({ messages, userId, chat, isUser }: MessagesProps) {
           <h1 className="text-2xl text-blue-500 font-bold">
             Welcome to #{chat.name}!
           </h1>
-          <p className="text-gray-300 text-sm">{chat.description}</p>
-          <p className="text-gray-300 text-sm mt-4">
+          <p className="text-gray-700 dark:text-gray-300 text-sm">
+            {chat.description}
+          </p>
+          <p className="text-gray-700 dark:text-gray-300 text-sm mt-4">
             Congrats, you&apos;ve scrolled up far enough to see the beginning of
             this channel.
           </p>
@@ -89,8 +91,8 @@ function Messages({ messages, userId, chat, isUser }: MessagesProps) {
                 new Date(
                   displayedMessages[i - 1].createdAt,
                 ).toLocaleDateString() !== dateString) && (
-                <div className="my-5 h-px mx-5 bg-gray-700 relative flex justify-center items-center">
-                  <div className="text-gray-300 bg-gray-950 text-sm absolute w-fit px-5">
+                <div className="my-5 h-px mx-5 bg-gray-300 dark:bg-gray-700 relative flex justify-center items-center">
+                  <div className="text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-950 text-sm absolute w-fit px-5">
                     {new Date().toLocaleDateString() === dateString
                       ? "Today"
                       : new Date(

@@ -3,15 +3,16 @@
 import type { User as UserType } from "better-auth";
 import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaSignOutAlt, FaUser } from "react-icons/fa";
+import { FaMoon, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { FaGear, FaSun } from "react-icons/fa6";
 import { authClient } from "@/lib/auth-client";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import Image from "next/image";
 
 const optionStyles =
-  "cursor-pointer hover:bg-gray-900 rounded p-2 text-gray-300 flex gap-x-2 items-center group";
+  "cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-900 rounded p-2 text-gray-700 dark:text-gray-300 flex gap-x-2 items-center group";
 const iconStyles =
   "group-hover:scale-120 group-hover:-translate-y-0.5 transition-transform! duration-250!";
 
@@ -20,6 +21,7 @@ function User({ user }: { user: UserType }) {
   const [loading, setLoading] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
 
   async function handleSignout() {
     setLoading(true);
@@ -64,7 +66,7 @@ function User({ user }: { user: UserType }) {
             initial={{ scale: 0, y: -13 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0, y: -13 }}
-            className="w-40 rounded border-2 origin-[90%_0px] border-gray-700 flex flex-col p-2 absolute top-[calc(100%+5px)] right-0 bg-gray-950"
+            className="w-40 rounded border-2 origin-[90%_0px] border-gray-700 flex flex-col p-2 absolute top-[calc(100%+5px)] right-0 bg-gray-200 dark:bg-gray-950"
           >
             <Link href="/profile" className={optionStyles}>
               <FaUser size={17} className={iconStyles} />
@@ -74,8 +76,15 @@ function User({ user }: { user: UserType }) {
               <FaGear size={17} className={iconStyles} />
               Settings
             </Link>
-            <div className={optionStyles}>
-              <FaSun size={17} className={iconStyles} />
+            <div
+              className={optionStyles}
+              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            >
+              {theme === "light" ? (
+                <FaMoon size={17} className={iconStyles} />
+              ) : (
+                <FaSun size={17} className={iconStyles} />
+              )}
               Mode
             </div>
             <div className={optionStyles} onClick={() => handleSignout()}>

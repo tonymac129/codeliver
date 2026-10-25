@@ -44,11 +44,11 @@ function Message({
 
   return (
     <div
-      className={`py-2 px-5 group flex flex-col gap-y-1 relative ${isHighlighted ? "bg-gray-900" : "hover:bg-[#0D111C]"} ${header && "mt-3"}`}
+      className={`py-2 px-5 group flex flex-col gap-y-1 relative ${isHighlighted ? "bg-gray-300 dark:bg-gray-900" : "hover:bg-gray-300/50 dark:hover:bg-[#0D111C]"} ${header && "mt-3"}`}
     >
       {message.replyMessage && (
         <div
-          className="text-gray-300 gap-x-3 text-sm flex items-center pl-6 cursor-pointer w-fit"
+          className="text-gray-700 dark:text-gray-300 gap-x-3 text-sm flex items-center pl-6 cursor-pointer w-fit"
           onClick={() => setHighlighted(message.replyMessage!.id)}
         >
           <HiOutlineReply size={20} className="rotate-y-180" />
@@ -78,18 +78,18 @@ function Message({
             title="View profile"
           />
         ) : (
-          <div className="opacity-0 group-hover:opacity-100 transition-opacity! text-[11px] absolute text-gray-400 left-5 top-[50%] translate-y-[-50%]">
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity! text-[11px] absolute text-gray-600 dark:text-gray-400 left-5 top-[50%] translate-y-[-50%]">
             {timeString}
           </div>
         )}
         <div className="flex flex-col gap-y-3">
           {header && (
             <div className="flex gap-x-5 items-center">
-              <h2 className="text-lg font-bold text-white">
+              <h2 className="text-lg font-bold text-black dark:text-white">
                 {message.user.name}
               </h2>
               <div
-                className="flex gap-x-1.5 text-xs text-gray-300"
+                className="flex gap-x-1.5 text-xs text-gray-700 dark:text-gray-300"
                 title={created.toISOString()}
               >
                 {currentTime.toLocaleDateString() !==
@@ -98,7 +98,9 @@ function Message({
               </div>
             </div>
           )}
-          <div className={`text-gray-300 ${!header && "pl-15.5"}`}>
+          <div
+            className={`text-gray-700 dark:text-gray-300 ${!header && "pl-15.5"}`}
+          >
             {message.message}
           </div>
           {message.reactions && message.reactions.length > 0 && (
@@ -113,7 +115,7 @@ function Message({
                 );
               })}
               <Emoji onselect={(emoji) => console.log(emoji)}>
-                <div className="px-2 py-1 text-gray-300 rounded border border-gray-700 cursor-pointer hover:bg-gray-800 text-base">
+                <div className="px-2 py-1 text-gray-700 dark:text-gray-300 rounded border border-gray-700 cursor-pointer hover:bg-gray-400 dark:hover:bg-gray-800 text-base">
                   <MdAddReaction size={20} />
                 </div>
               </Emoji>

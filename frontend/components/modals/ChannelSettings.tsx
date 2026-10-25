@@ -16,7 +16,7 @@ import { authClient } from "@/lib/auth-client";
 import { FaXmark } from "react-icons/fa6";
 
 const optionStyles =
-  "flex px-4 py-2 rounded items-center gap-x-3 hover:bg-gray-900 cursor-pointer";
+  "flex px-4 py-2 rounded items-center gap-x-3 hover:bg-gray-300 dark:hover:bg-gray-900 cursor-pointer";
 
 interface ChannelSettingsProps {
   channel: ChannelType;
@@ -67,7 +67,9 @@ function ChannelSettings({ channel, closeModal }: ChannelSettingsProps) {
 
   return (
     <>
-      <h2 className="text-xl text-white font-bold">Channel settings</h2>
+      <h2 className="text-xl text-black dark:text-white font-bold">
+        Channel settings
+      </h2>
       {/* TODO: add more channel settings */}
       <div className="flex flex-col gap-y-1">
         <h2 className="font-bold text-lg mb-2">Danger zone</h2>
@@ -122,7 +124,7 @@ function ChannelSettings({ channel, closeModal }: ChannelSettingsProps) {
                   <form onSubmit={handleSearch} className={labelStyles}>
                     New owner (has to be in channel)
                     {user ? (
-                      <div className="px-2 py-1 rounded flex gap-x-2 items-center bg-gray-900 w-fit">
+                      <div className="px-2 py-1 rounded flex gap-x-2 items-center bg-gray-300 dark:bg-gray-900 w-fit">
                         <Image
                           src={user.image || "/avatar.svg"}
                           alt="Avatar"
@@ -155,7 +157,7 @@ function ChannelSettings({ channel, closeModal }: ChannelSettingsProps) {
                                 <div
                                   key={u.id}
                                   onMouseDown={() => setUser(u)}
-                                  className="flex items-center gap-x-3 px-2 py-1 rounded hover:bg-gray-900 cursor-pointer"
+                                  className="flex items-center gap-x-3 px-2 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-900 cursor-pointer"
                                 >
                                   <Image
                                     src={u.image || "/avatar.svg"}
