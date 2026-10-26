@@ -8,6 +8,7 @@ import Menu from "@/components/chat/Menu";
 import Channel from "@/components/chat/Channel";
 import Link from "next/link";
 import Browse from "@/components/chat/Browse";
+import DirectMenu from "@/components/chat/DirectMenu";
 
 const headerStyles =
   "text-blue-500 font-bold ml-4 text-lg flex gap-x-3 mb-2 items-center relative group";
@@ -18,7 +19,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
   const chats = await prisma.chat.findMany({
-    where: { users: { some: { id: session.user.id } } },
+    where: { users: { some: { id: session.user.id } }, isDirectMessage: false },
     orderBy: { name: "asc" },
   });
 
@@ -27,7 +28,10 @@ async function Layout({ children }: { children: React.ReactNode }) {
       <div className="w-70 flex flex-col gap-y-5 border-r-2 border-r-gray-700 py-5 h-full overflow-auto pr-5 text-gray-700 dark:text-gray-300">
         <div className="flex flex-col gap-y-1">
           <h2 className={headerStyles}>
-            <FaHashtag size={17} /> Channels <Menu />
+            <Link href="/chat" className="flex gap-x-3 items-center">
+              <FaHashtag size={17} /> Channels
+            </Link>{" "}
+            <Menu />
           </h2>
           {chats.length > 0 ? (
             chats.map((chat) => {
@@ -42,22 +46,16 @@ async function Layout({ children }: { children: React.ReactNode }) {
         </div>
         <div className="flex flex-col gap-y-1">
           <h2 className={headerStyles}>
-            <MdChat size={17} /> Direct messages
+            <Link href="/chat/dm" className="flex gap-x-3 items-center">
+              <MdChat size={17} /> Direct messages
+            </Link>{" "}
+            <DirectMenu />
           </h2>
+          <div className="text-sm text-center py-5">
+            Your DMs will show up here
+          </div>
           <Link href="/chat/6" className={chatStyles}>
             DM 1
-          </Link>
-          <Link href="/chat/7" className={chatStyles}>
-            DM 2
-          </Link>
-          <Link href="/chat/8" className={chatStyles}>
-            DM 3
-          </Link>
-          <Link href="/chat/9" className={chatStyles}>
-            DM 4
-          </Link>
-          <Link href="/chat/10" className={chatStyles}>
-            DM 5
           </Link>
         </div>
       </div>

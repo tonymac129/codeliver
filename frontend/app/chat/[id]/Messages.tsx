@@ -24,9 +24,16 @@ interface MessagesProps {
   userId: string;
   chat: Chat;
   isUser: boolean;
+  otherUser?: User;
 }
 
-function Messages({ messages, userId, chat, isUser }: MessagesProps) {
+function Messages({
+  messages,
+  userId,
+  chat,
+  isUser,
+  otherUser,
+}: MessagesProps) {
   const [replying, setReplying] = useState<MessageT | null>(null);
   const [highlighted, setHighlighted] = useState<string | null>(null);
   const [displayedMessages, setDisplayedMessages] =
@@ -69,14 +76,16 @@ function Messages({ messages, userId, chat, isUser }: MessagesProps) {
       <div className="flex-1 dh-[calc(100%-150px)] overflow-y-auto pb-10 overflow-x-hidden flex flex-col">
         <div className="py-10 flex flex-col gap-y-1 px-5">
           <h1 className="text-2xl text-blue-500 font-bold">
-            Welcome to #{chat.name}!
+            {otherUser
+              ? `Your chat with ${otherUser.name}`
+              : `Welcome to #${chat.name}!`}
           </h1>
           <p className="text-gray-700 dark:text-gray-300 text-sm">
             {chat.description}
           </p>
           <p className="text-gray-700 dark:text-gray-300 text-sm mt-4">
             Congrats, you&apos;ve scrolled up far enough to see the beginning of
-            this channel.
+            this {otherUser ? "chat" : "channel"}.
           </p>
         </div>
         {displayedMessages.map((message, i) => {
@@ -127,7 +136,7 @@ function Messages({ messages, userId, chat, isUser }: MessagesProps) {
       </div>
       {isUser ? (
         <MessageInput
-          name={"#" + chat.name}
+          name={otherUser ? otherUser.name : "#" + chat.name}
           setReplying={setReplying}
           replying={replying}
           chatId={chat.id}
@@ -136,9 +145,10 @@ function Messages({ messages, userId, chat, isUser }: MessagesProps) {
         <Join
           channel={{
             id: chat.id,
-            name: chat.name,
+            name: otherUser ? otherUser.name : chat.name,
             description: chat.description || "",
           }}
+          isDirect={otherUser ? true : false}
         />
       )}
     </>

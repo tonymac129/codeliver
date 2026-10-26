@@ -33,13 +33,17 @@ export async function editChannel(channel: ChannelType) {
       const existingChannel = await prisma.chat.findUnique({
         where: { id: channel.id },
       });
-      if (existingChannel && existingChannel.userId === session.user.id) {
+      if (
+        existingChannel &&
+        existingChannel.userId === session.user.id &&
+        !existingChannel.isDirectMessage
+      ) {
         const sameName = await prisma.chat.findUnique({
-          where: { name: channel.name },
+          where: { name: channel.name, isDirectMessage: false },
         });
         if (!sameName || sameName.id === channel.id) {
           const updatedChannel = await prisma.chat.update({
-            where: { id: channel.id },
+            where: { id: channel.id, isDirectMessage: false },
             data: {
               name: channel.name,
               description: channel.description,
@@ -58,5 +62,29 @@ export async function editChannel(channel: ChannelType) {
   } catch (err) {
     console.error("Error: " + err);
     return { error: "An error occured, please try again later" };
+  }
+}
+
+export async function createDirect(userId: string) {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (session && session.user.id !== userId) {
+      const id = [session.user.id, userId].sort().join("");
+      await prisma.chat.upsert({
+        where: { dmId: id },
+        update: {
+          users: { connect: [{ id: userId }, { id: session.user.id }] },
+        },
+        create: {
+          name: id,
+          userId: session.user.id,
+          users: { connect: [{ id: userId }, { id: session.user.id }] },
+          isDirectMessage: true,
+          dmId: id,
+        },
+      });
+    }
+  } catch (err) {
+    console.error("Error: " + err);
   }
 }

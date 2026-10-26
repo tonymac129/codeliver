@@ -29,6 +29,10 @@ export default async function Home() {
         <div className="flex gap-x-5">
           <Btn text="Try now" link="/login" primary />
           <Btn text="Learn more" link="/#features" />
+          <Btn
+            text="Source code"
+            link="https://github.com/tonymac129/codeliver"
+          />
         </div>
       </div>
       <div className="flex flex-col px-30 pb-15">
@@ -43,22 +47,27 @@ export default async function Home() {
                 className="rounded w-full"
               />
             </div>
-            <ul className="text-gray-700 dark:text-gray-300 list-disc flex-1">
-              <li>Cool feature 1</li>
-              <li>Cool feature 2</li>
-              <li>Cool feature 3</li>
-              <li>Cool feature 4</li>
-              <li>Cool feature 5</li>
+            <ul className="text-gray-700 dark:text-gray-300 list-disc flex-1 flex flex-col gap-y-2">
+              <li>Real-time chat and direct messenging</li>
+              <li>Create, edit, browse, and join different channels</li>
+              <li>
+                Upload files, format messages, customize your profile, and
+                change chat settings
+              </li>
+              <li>Syntax highlighting for code snippets and blocks</li>
+              <li>Supports both light and dark modes and responsive design</li>
             </ul>
           </div>
         </Section>
         <Section title="About">
           <div className="flex gap-x-20 py-3 items-center w-full">
             <p className="text-gray-700 dark:text-gray-300 flex-1">
-              More about Codeliver. Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Eveniet voluptates nam ullam ducimus et, dolorum
-              odit, aut blanditiis perferendis quisquam porro. Quod officiis,
-              earum voluptatum natus delectus rerum magnam enim.
+              Codeliver is an online real-time chat platform made for developers
+              to easily share syntax-highlighted code snippets, link GitHub
+              repositories, and communicate and collaborate with each other.
+              Discuss different topics and invite your team to different
+              channels or directly chat with another person through direct
+              messenging.
             </p>
             <div className="flex-1">
               <Image

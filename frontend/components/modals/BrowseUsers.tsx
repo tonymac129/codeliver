@@ -6,11 +6,13 @@ import Input from "../ui/Input";
 import UserCard from "../chat/UserCard";
 
 interface BrowseUsersProps {
-  channelId: string;
-  addedUsers: User[];
-  owner: string;
-  isOwner: boolean;
-  isPublic: boolean;
+  channelId?: string;
+  addedUsers?: User[];
+  owner?: string;
+  isOwner?: boolean;
+  isPublic?: boolean;
+  userId?: string;
+  closeModal?: () => void;
 }
 
 function BrowseUsers({
@@ -19,11 +21,14 @@ function BrowseUsers({
   owner,
   isOwner,
   isPublic,
+  userId,
+  closeModal,
 }: BrowseUsersProps) {
   const [search, setSearch] = useState<string>("");
   const [searched, setSearched] = useState<boolean>(false);
   const [users, setUsers] = useState<User[]>([]);
-  const [displayAdded, setDisplayAdded] = useState<User[]>(addedUsers);
+  const [searching, setSearching] = useState<boolean>(false);
+  const [displayAdded, setDisplayAdded] = useState<User[]>(addedUsers || []);
   const externalUsers = users.filter(
     (u) => !displayAdded.find((d) => d.id === u.id),
   );
@@ -32,32 +37,37 @@ function BrowseUsers({
     e.preventDefault();
     const q = search.trim().toLowerCase();
     if (q.length > 0) {
-      const matchedUsers = await fetch(
+      setSearching(true);
+      const matchedUsers: User[] = await fetch(
         `${process.env.NEXT_PUBLIC_ROOT_URL}/api/users?q=${q}&c=${channelId}`,
       ).then((res) => res.json());
-      setUsers(matchedUsers);
+      setUsers(matchedUsers.filter((u) => !userId || u.id !== userId));
       setDisplayAdded(
-        addedUsers.filter(
-          (u) =>
-            u.name.trim().includes(q) ||
-            u.username.trim().includes(q) ||
-            u.email.trim().includes(q) ||
-            u.about?.trim().includes(q) ||
-            u.name.trim().includes(q),
-        ),
+        addedUsers
+          ? addedUsers.filter(
+              (u) =>
+                u.name.trim().includes(q) ||
+                u.username.trim().includes(q) ||
+                u.email.trim().includes(q) ||
+                u.about?.trim().includes(q) ||
+                u.name.trim().includes(q),
+            )
+          : matchedUsers,
       );
       setSearched(true);
+      setSearching(false);
     }
   }
 
   function handleClear() {
     setUsers([]);
-    setDisplayAdded(addedUsers);
+    setDisplayAdded(addedUsers || []);
     setSearched(false);
+    setSearching(false);
   }
 
   useEffect(() => {
-    setDisplayAdded(addedUsers);
+    setDisplayAdded(addedUsers || []);
   }, [addedUsers]);
 
   return (
@@ -74,7 +84,9 @@ function BrowseUsers({
         />
         <button type="submit" className="hidden" />
       </form>
-      <div className="flex flex-col gap-y-3 border-b-2 border-b-gray-700 pb-5 min-h-50 overflow-auto">
+      <div
+        className={`flex flex-col gap-y-3 ${channelId && "border-b-2 border-b-gray-700 min-h-50 pb-5"} overflow-auto`}
+      >
         {displayAdded.map((user) => {
           return (
             <UserCard
@@ -84,6 +96,7 @@ function BrowseUsers({
               isOwner={isOwner}
               owner={owner === user.id}
               added
+              closeModal={() => (closeModal ? closeModal() : undefined)}
             />
           );
         })}
@@ -109,10 +122,16 @@ function BrowseUsers({
           </div>
         </>
       ) : (
-        <div className="text-center text-gray-700 dark:text-gray-300 text-sm py-5">
-          {searched
-            ? "No users found"
-            : "Type in the name and press enter to search users!"}
+        <div
+          className={`text-center text-gray-700 dark:text-gray-300 text-sm pb-5 ${channelId && "pt-5"}`}
+        >
+          {searched && !searching
+            ? channelId || displayAdded.length === 0
+              ? "No users found"
+              : ""
+            : searching
+              ? "Searching everything..."
+              : "Type in the name and press enter to search users!"}
         </div>
       )}
     </>

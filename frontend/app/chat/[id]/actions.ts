@@ -37,7 +37,7 @@ export async function removeUser(channelId: string, userId?: string) {
             return false;
           } else {
             await prisma.chat.update({
-              where: { id: channelId },
+              where: { id: channelId, isDirectMessage: false },
               data: { users: { disconnect: { id: userId } } },
             });
           }
@@ -63,6 +63,7 @@ export async function deleteChannel(channelId: string) {
         where: {
           id: channelId,
           userId: session.user.id,
+          isDirectMessage: false,
         },
       });
       revalidatePath(`/chat/${channelId}`);
@@ -77,7 +78,11 @@ export async function transferOwnership(channelId: string, userId: string) {
     const session = await auth.api.getSession({ headers: await headers() });
     if (session && session.user.id !== userId) {
       await prisma.chat.update({
-        where: { id: channelId, userId: session.user.id },
+        where: {
+          id: channelId,
+          userId: session.user.id,
+          isDirectMessage: false,
+        },
         data: { userId: userId },
       });
       revalidatePath(`/chat/${channelId}`);

@@ -70,7 +70,7 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
             />
             {isOwner && <EditChannel channel={cleanChannel} />}
             {isOwner && <Settings channel={cleanChannel} />}
-            <LeaveChannel channel={cleanChannel} />
+            <LeaveChannel channel={cleanChannel} currentId={session?.user.id} />
           </div>
         )}
       </div>

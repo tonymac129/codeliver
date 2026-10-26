@@ -7,27 +7,21 @@ import { motion, AnimatePresence } from "framer-motion";
 const questions = [
   {
     id: 0,
-    question: "Question 1",
+    question: "Why should I use Codeliver instead of Slack or Discord?",
     answer:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque quasi sint accusantium quae laudantium similique eos est nesciunt minus iure iusto hic quos, laboriosam molestiae aspernatur alias? Accusantium, tenetur aliquid.",
+      "You don't. Slack and Discord are both significantly better than Codeliver in basically every aspect about real-time chatting. But if you want to use or even self host something simple that's open source and specifically tailored to a developer's needs, Codeliver is a pretty good option.",
   },
   {
     id: 1,
-    question: "Question 2",
+    question: "Are my chat messages and data private?",
     answer:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque quasi sint accusantium quae laudantium similique eos est nesciunt minus iure iusto hic quos, laboriosam molestiae aspernatur alias? Accusantium, tenetur aliquid.",
+      "Everything you send or upload on Codeliver is securely stored in the cloud/our backend database. Since this app is open source, you can also self host the app and control everything yourself by cloning the repository and setting up the Docker container services.",
   },
   {
     id: 2,
-    question: "Question 3",
+    question: "How do I try Codeliver?",
     answer:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque quasi sint accusantium quae laudantium similique eos est nesciunt minus iure iusto hic quos, laboriosam molestiae aspernatur alias? Accusantium, tenetur aliquid.",
-  },
-  {
-    id: 3,
-    question: "Question 4",
-    answer:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque quasi sint accusantium quae laudantium similique eos est nesciunt minus iure iusto hic quos, laboriosam molestiae aspernatur alias? Accusantium, tenetur aliquid.",
+      "You can try using Codeliver to send messages or code snippets right now by signing up for an account on the website and sending something in one of our public channels! Everything is completely free to use and easy to setup.",
   },
 ];
 

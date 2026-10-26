@@ -5,16 +5,19 @@ import { addUser, removeUser } from "@/app/chat/[id]/actions";
 import { useState } from "react";
 import { FaCrown } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
+import { createDirect } from "@/app/chat/actions";
+import { useRouter } from "next/navigation";
 import Btn from "../ui/Btn";
 import Image from "next/image";
 
 interface UserCardProps {
-  channelId: string;
+  channelId?: string;
   user: User;
   added?: boolean;
   isOwner?: boolean;
   owner?: boolean;
   isPublic?: boolean;
+  closeModal?: () => void;
 }
 
 function UserCard({
@@ -24,17 +27,29 @@ function UserCard({
   isOwner,
   owner,
   isPublic,
+  closeModal,
 }: UserCardProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const { data: session } = authClient.useSession();
+  const router = useRouter();
 
   async function handleAdd() {
-    setLoading(true);
-    if (added) {
-      await removeUser(channelId, user.id);
-    } else {
-      await addUser(channelId, user.id);
+    if (channelId) {
+      setLoading(true);
+      if (added) {
+        await removeUser(channelId, user.id);
+      } else {
+        await addUser(channelId, user.id);
+      }
+      setLoading(false);
     }
+  }
+
+  async function handleMessage() {
+    setLoading(true);
+    await createDirect(user.id);
+    router.push(`/chat/dm/${user.id}`);
+    if (closeModal) closeModal();
     setLoading(false);
   }
 
@@ -63,6 +78,7 @@ function UserCard({
         </p>
       </div>
       {!(isOwner && owner) &&
+        channelId &&
         ((!added && isPublic) || isOwner || session?.user.id === user.id) && (
           <Btn
             text={
@@ -79,6 +95,14 @@ function UserCard({
             primary={!added}
           />
         )}
+      {!channelId && (
+        <Btn
+          text={loading ? "Loading..." : "Message"}
+          styles="right-0 absolute text-sm py-0.5 px-2"
+          onclick={handleMessage}
+          primary
+        />
+      )}
     </div>
   );
 }
