@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
+import Browse from "@/components/chat/Browse";
+import Channel from "@/components/home/Channel";
 
 export const metadata: Metadata = {
   title: "Chat | Codeliver",
@@ -23,17 +28,31 @@ export const metadata: Metadata = {
   },
 };
 
-function Page() {
+async function Page() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect("/");
+  const chatData = await prisma.chat.findMany({
+    where: { users: { some: { id: session.user.id } }, isDirectMessage: false },
+    include: {
+      messages: { orderBy: { createdAt: "desc" } },
+    },
+  });
+  const chats = chatData.sort(
+    (a, b) =>
+      a.messages[0]?.createdAt.getTime() - b.messages[0]?.createdAt.getTime(),
+  );
+
   return (
-    <div className="h-full flex flex-col items-center justify-center gap-y-10">
-      <h1 className="text-3xl text-blue-500 font-extrabold">Chat</h1>
-      <p className="text-gray-700 dark:text-gray-300 text-center w-[50%]">
-        Select a channel or direct message on the left sidebar to start
-        chatting, sharing code, and collaborating!
-      </p>
-      <Link href="/chat/1" className="text-blue-500 hover:underline">
-        Channel 1
-      </Link>
+    <div className="flex flex-1 px-6 py-10 flex-col gap-y-3">
+      <h1 className="text-3xl font-extrabold text-blue-500 px-4">Channels</h1>
+      {chats.length > 0 ? (
+        <Channel chats={chats} userId={session.user.id} />
+      ) : (
+        <div>
+          You&apos;re not in any channels yet...
+          <Browse />
+        </div>
+      )}
     </div>
   );
 }

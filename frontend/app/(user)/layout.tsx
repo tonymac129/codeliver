@@ -15,9 +15,6 @@ function Layout({ children }: { children: React.ReactNode }) {
           </Link>
           <Tab name="Profile" />
           <Tab name="Settings" />
-          <Tab name="Appearance" />
-          <Tab name="Notifications" />
-          <Tab name="Data" />
           <Tab name="Feedback" />
         </div>
       </div>

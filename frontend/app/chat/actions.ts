@@ -83,6 +83,7 @@ export async function createDirect(userId: string) {
           dmId: id,
         },
       });
+      revalidatePath("/chat");
     }
   } catch (err) {
     console.error("Error: " + err);

@@ -1,19 +1,20 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { FaHashtag } from "react-icons/fa6";
 import { MdChat } from "react-icons/md";
+import { FaHashtag } from "react-icons/fa";
 import { prisma } from "@/lib/prisma";
 import Menu from "@/components/chat/Menu";
 import Channel from "@/components/chat/Channel";
 import Link from "next/link";
 import Browse from "@/components/chat/Browse";
 import DirectMenu from "@/components/chat/DirectMenu";
+import Direct from "@/components/chat/Direct";
 
 const headerStyles =
   "text-blue-500 font-bold ml-4 text-lg flex gap-x-3 mb-2 items-center relative group";
-const chatStyles =
-  "px-4 py-2 rounded hover:bg-gray-300 dark:hover:bg-gray-900 text-sm";
+const messageStyles =
+  "text-gray-700 dark:text-gray-300 text-center text-sm flex flex-col gap-y-1 items-center py-5";
 
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -21,6 +22,11 @@ async function Layout({ children }: { children: React.ReactNode }) {
   const chats = await prisma.chat.findMany({
     where: { users: { some: { id: session.user.id } }, isDirectMessage: false },
     orderBy: { name: "asc" },
+  });
+  const directs = await prisma.chat.findMany({
+    where: { users: { some: { id: session.user.id } }, isDirectMessage: true },
+    orderBy: { name: "asc" },
+    include: { users: true },
   });
 
   return (
@@ -38,7 +44,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
               return <Channel key={chat.id} channel={chat} />;
             })
           ) : (
-            <div className="text-gray-700 dark:text-gray-300 text-center text-sm flex flex-col gap-y-1 items-center py-5">
+            <div className={messageStyles}>
               <div>You haven&apos;t joined a channel yet</div>
               <Browse />
             </div>
@@ -48,15 +54,21 @@ async function Layout({ children }: { children: React.ReactNode }) {
           <h2 className={headerStyles}>
             <Link href="/chat/dm" className="flex gap-x-3 items-center">
               <MdChat size={17} /> Direct messages
-            </Link>{" "}
+            </Link>
             <DirectMenu />
           </h2>
-          <div className="text-sm text-center py-5">
-            Your DMs will show up here
-          </div>
-          <Link href="/chat/6" className={chatStyles}>
-            DM 1
-          </Link>
+          {directs.length > 0 ? (
+            directs.map((d) => (
+              <Direct
+                key={d.id}
+                user={d.users.find((u) => u.id !== session.user.id)!}
+              />
+            ))
+          ) : (
+            <div className={messageStyles}>
+              <div>You don&apos;t have any DMs yet</div>
+            </div>
+          )}
         </div>
       </div>
       {children}

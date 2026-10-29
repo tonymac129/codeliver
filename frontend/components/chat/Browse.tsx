@@ -1,11 +1,11 @@
 "use client";
 
 import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import React, { useState } from "react";
 import BrowseChannels from "../modals/BrowseChannels";
 import Modal from "../ui/Modal";
 
-function Browse() {
+function Browse({ children }: { children?: React.ReactNode }) {
   const [browsing, setBrowsing] = useState<boolean>(false);
 
   return (
@@ -14,7 +14,7 @@ function Browse() {
         className="text-blue-500 hover:underline cursor-pointer"
         onClick={() => setBrowsing(true)}
       >
-        Browse channels
+        {children || "Browse channels"}
       </div>
       <AnimatePresence>
         {browsing && (

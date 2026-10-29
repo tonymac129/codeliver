@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export async function leaveDirect(userId: string) {
   try {
@@ -15,6 +16,7 @@ export async function leaveDirect(userId: string) {
         },
         data: { users: { disconnect: { id: session.user.id } } },
       });
+      revalidatePath("/chat");
     }
   } catch (err) {
     console.error("Error: " + err);

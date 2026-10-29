@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
             users: { some: { id: session ? session.user.id : "" } },
           },
         ],
+        isDirectMessage: false,
       },
       include: { users: true },
     });

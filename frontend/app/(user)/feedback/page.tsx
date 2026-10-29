@@ -28,6 +28,7 @@ export const metadata: Metadata = {
 async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
+  //TODO: add feedback form
 
   return (
     <div className="flex-1 py-10 overflow-auto">
