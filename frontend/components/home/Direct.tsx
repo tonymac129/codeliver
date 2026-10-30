@@ -63,7 +63,7 @@ function Direct({ chats, userId }: DirectProps) {
                   <h2>{user.name}</h2>
                   {d.messages[0] ? (
                     <p>
-                      {d.messages[0].createdAt.toLocaleDateString()}
+                      {d.messages[0].createdAt.toLocaleDateString()}{" "}
                       {d.messages[0].userId === userId
                         ? "You: "
                         : user.name + ": "}

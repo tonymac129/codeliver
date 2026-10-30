@@ -12,3 +12,10 @@ export interface EmojiType {
   keywords: string[];
   shortcodes: string;
 }
+
+export interface FeedbackType {
+  title: string;
+  description: string;
+  type?: string;
+  anonymous: boolean;
+}

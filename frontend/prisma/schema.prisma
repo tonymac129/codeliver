@@ -8,25 +8,27 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String     @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
-  username      String    @unique @default(uuid())
+  emailVerified Boolean    @default(false)
+  username      String     @unique @default(uuid())
   status        String?
   statusEmoji   String?
   about         String?
   pronouns      String?
   website       String?
+  github        String?
   location      String?
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   sessions      Session[]
   accounts      Account[]
   messages      Message[]
   chats         Chat[]
-  ownedChats    Chat[]    @relation("owner")
+  ownedChats    Chat[]     @relation("owner")
+  feedback      Feedback[]
 
   @@unique([email])
   @@map("user")
@@ -133,4 +135,16 @@ model Reaction {
   users     String[]
   messageId String
   message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+}
+
+model Feedback {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  type        String
+  anonymous   Boolean? @default(false)
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

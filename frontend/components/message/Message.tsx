@@ -4,11 +4,15 @@ import type { Message as MessageT } from "@/generated/prisma/client";
 import type { MessageType } from "@/app/chat/[id]/Messages";
 import { MdAddReaction } from "react-icons/md";
 import { HiOutlineReply } from "react-icons/hi";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
 import Reaction from "./Reaction";
 import Emoji from "../ui/Emoji";
+import Modal from "../ui/Modal";
 import Image from "next/image";
 import Bar from "./Bar";
+import Feedback from "../user/Feedback";
+import Forward from "../modals/Forward";
 
 interface MessageProps {
   message: MessageType;
@@ -29,6 +33,8 @@ function Message({
   setHighlighted,
   header,
 }: MessageProps) {
+  const [reporting, setReporting] = useState<boolean>(false);
+  const [forwarding, setForwarding] = useState<boolean>(false);
   const isHighlighted = highlighted === message.id;
   const currentTime = new Date();
   const created = new Date(message.createdAt);
@@ -122,8 +128,28 @@ function Message({
             </div>
           )}
         </div>
-        <Bar message={message} setReplying={setReplying} index={index} />
+        <Bar
+          message={message}
+          setReplying={setReplying}
+          index={index}
+          setReporting={setReporting}
+          setForwarding={setForwarding}
+        />
       </div>
+      <AnimatePresence>
+        {reporting && (
+          <Modal closeModal={() => setReporting(false)}>
+            <Feedback defaultType="Message" />
+          </Modal>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {forwarding && (
+          <Modal closeModal={() => setForwarding(false)}>
+            <Forward />
+          </Modal>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -18,6 +18,7 @@ interface UserCardProps {
   owner?: boolean;
   isPublic?: boolean;
   closeModal?: () => void;
+  forwarding?: boolean;
 }
 
 function UserCard({
@@ -28,6 +29,7 @@ function UserCard({
   owner,
   isPublic,
   closeModal,
+  forwarding,
 }: UserCardProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const { data: session } = authClient.useSession();
@@ -47,7 +49,11 @@ function UserCard({
 
   async function handleMessage() {
     setLoading(true);
-    await createDirect(user.id);
+    if (forwarding) {
+      //TODO: finish forwarding
+    } else {
+      await createDirect(user.id);
+    }
     router.push(`/chat/dm/${user.id}`);
     if (closeModal) closeModal();
     setLoading(false);
@@ -97,7 +103,7 @@ function UserCard({
         )}
       {!channelId && (
         <Btn
-          text={loading ? "Loading..." : "Message"}
+          text={loading ? "Loading..." : forwarding ? "Send" : "Message"}
           styles="right-0 absolute text-sm py-0.5 px-2"
           onclick={handleMessage}
           primary

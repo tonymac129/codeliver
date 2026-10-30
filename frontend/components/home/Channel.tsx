@@ -55,7 +55,7 @@ function Channel({ chats, userId }: DirectProps) {
                 <h2>{c.name}</h2>
                 {c.messages[0] ? (
                   <p>
-                    {c.messages[0].createdAt.toLocaleDateString()}
+                    {c.messages[0].createdAt.toLocaleDateString()}{" "}
                     {c.messages[0].userId === userId && "You: "}
                     {c.messages[0].message.slice(0, 100) +
                       (c.messages[0].message.length > 100 ? "..." : "")}

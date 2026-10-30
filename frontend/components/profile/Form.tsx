@@ -134,6 +134,14 @@ function Form({ userData }: { userData: User }) {
         />
       </label>
       <label className={labelStyles}>
+        GitHub
+        <Input
+          placeholder="github.com/tonymac129"
+          value={user.github || ""}
+          setValue={(github) => setUser({ ...user, github })}
+        />
+      </label>
+      <label className={labelStyles}>
         Location
         <Input
           placeholder="Somewhere on Earth"

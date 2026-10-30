@@ -11,7 +11,7 @@ function Search() {
       placeholder="Search Codeliver"
       value={search}
       setValue={setSearch}
-      styles="w-100"
+      styles="flex-1"
       clear
     />
   );

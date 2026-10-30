@@ -6,6 +6,7 @@ export async function GET(req: NextRequest) {
     const query = req.nextUrl.searchParams.get("q")?.trim().toLowerCase();
     const channel = req.nextUrl.searchParams.get("c")?.trim().toLowerCase();
     const inChannel = req.nextUrl.searchParams.get("i") ? true : false;
+    const isDirect = req.nextUrl.searchParams.get("d") ? true : false;
     if (query) {
       const users = await prisma.user.findMany({
         where: {
@@ -41,9 +42,11 @@ export async function GET(req: NextRequest) {
               },
             },
           ],
-          chats: inChannel
-            ? { some: { id: channel } }
-            : { none: { id: channel } },
+          chats: isDirect
+            ? undefined
+            : inChannel
+              ? { some: { id: channel } }
+              : { none: { id: channel } },
         },
       });
       return NextResponse.json(users);

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import Feedback from "@/components/user/Feedback";
 
 export const metadata: Metadata = {
   title: "Submit Feedback | Codeliver",
@@ -28,11 +29,11 @@ export const metadata: Metadata = {
 async function Page() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
-  //TODO: add feedback form
 
   return (
-    <div className="flex-1 py-10 overflow-auto">
+    <div className="flex-1 py-10 overflow-auto flex flex-col gap-y-5 w-160">
       <h1 className="text-3xl text-blue-500 font-extrabold">Submit feedback</h1>
+      <Feedback />
     </div>
   );
 }

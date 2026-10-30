@@ -22,6 +22,12 @@ export async function editProfile(user: User) {
               ? user.website
               : "https://" + user.website
             : null,
+          github: user.github
+            ? user.github?.includes("https://") ||
+              user.github?.includes("http://")
+              ? user.github
+              : "https://" + user.github
+            : null,
         },
       });
       revalidatePath("/profile");

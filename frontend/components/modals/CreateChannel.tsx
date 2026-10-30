@@ -3,12 +3,12 @@
 import type { ChannelType } from "@/types/Chat";
 import { useState } from "react";
 import { labelStyles } from "@/lib/constants";
-import { FaCheck } from "react-icons/fa";
 import { createChannel, editChannel } from "@/app/chat/actions";
 import { useRouter } from "next/navigation";
 import Input from "../ui/Input";
 import Btn from "../ui/Btn";
 import Textarea from "../ui/Textarea";
+import Toggle from "../ui/Toggle";
 
 interface CreateChannelProps {
   closeModal: () => void;
@@ -73,32 +73,11 @@ function CreateChannel({ closeModal, existingChannel }: CreateChannelProps) {
           }
         />
       </label>
-      <label
-        className="flex gap-x-3 items-center cursor-pointer w-fit"
-        title="Only people you invite can join and message in the channel"
-      >
-        <input
-          type="checkbox"
-          checked={newChannel.private || false}
-          onChange={(e) =>
-            setNewChannel({ ...newChannel, private: e.target.checked })
-          }
-          className="hidden"
-        />
-        <div
-          className={`${newChannel.private ? "bg-blue-200 dark:bg-blue-950" : "bg-gray-300 dark:bg-gray-900"} h-6 rounded-full relative px-1 flex items-center w-11`}
-        >
-          <div
-            className={`${newChannel.private ? "bg-blue-500 translate-x-5" : "bg-gray-700"} w-4 h-4 rounded-full transition-all! flex items-center justify-center text-black dark:text-white`}
-          >
-            <FaCheck
-              size={11}
-              className={`${newChannel.private ? "opacity-100" : "opacity-0"} transition-opacity!`}
-            />
-          </div>
-        </div>
-        Private
-      </label>
+      <Toggle
+        text="Private"
+        checked={newChannel.private}
+        setChecked={(v) => setNewChannel({ ...newChannel, private: v })}
+      />
       {error && <div className="text-red-500 text-sm">{error}</div>}
       <Btn
         text={loading ? "Loading..." : existingChannel ? "Save" : "Create"}
