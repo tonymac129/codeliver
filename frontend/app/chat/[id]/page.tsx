@@ -3,14 +3,20 @@ import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { FaHashtag, FaLock } from "react-icons/fa";
-import Messages from "./Messages";
+import Messages, { MessageType } from "./Messages";
 import EditChannel from "@/components/chat/EditChannel";
 import AddUsers from "@/components/chat/AddUsers";
 import Settings from "@/components/chat/Settings";
 import LeaveChannel from "@/components/chat/LeaveChannel";
 
-async function Page({ params }: { params: Promise<{ id: string }> }) {
+interface PageProps {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ h: string | undefined }>;
+}
+
+async function Page({ params, searchParams }: PageProps) {
   const { id } = await params;
+  const { h } = await searchParams;
   const session = await auth.api.getSession({ headers: await headers() });
   const existingChat = await prisma.chat.findUnique({
     where: { id },
@@ -22,6 +28,8 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
           reactions: true,
           replyMessage: { include: { user: true } },
           threads: true,
+          originalChannel: true,
+          originalUser: true,
         },
       },
       users: true,
@@ -75,10 +83,11 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
         )}
       </div>
       <Messages
-        messages={existingChat.messages}
+        messages={existingChat.messages as MessageType[]}
         userId={session!.user.id}
         chat={existingChat}
         isUser={isUser}
+        highlightedId={h}
       />
     </div>
   );

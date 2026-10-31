@@ -15,6 +15,7 @@ import { MdSend } from "react-icons/md";
 import { socket } from "@/lib/socket";
 import Input from "../ui/Input";
 import Btn from "../ui/Btn";
+import { sendMessage } from "@/app/chat/[id]/actions";
 
 const optionStyles =
   "rounded cursor-pointer p-1.75 hover:bg-gray-300 dark:hover:bg-gray-900";
@@ -113,6 +114,7 @@ function MessageInput({
           <MdSend size={18} />
         </Btn>
       )}
+      <button onClick={() => sendMessage()}>test message</button>
     </form>
   );
 }

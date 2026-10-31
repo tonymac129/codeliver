@@ -11,6 +11,7 @@ interface InputProps {
   styles?: string;
   clear?: boolean | (() => void);
   focused?: boolean;
+  onblur?: () => void;
 }
 
 function Input({
@@ -21,6 +22,7 @@ function Input({
   styles,
   clear,
   focused,
+  onblur,
 }: InputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -48,6 +50,7 @@ function Input({
         placeholder={placeholder}
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        onBlur={() => (onblur ? onblur() : undefined)}
         ref={inputRef}
         className={`outline-none text-base ${clear ? "w-[calc(100%-20px)]" : "w-full"}`}
       />

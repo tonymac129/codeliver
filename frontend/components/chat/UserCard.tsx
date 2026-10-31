@@ -1,12 +1,13 @@
 "use client";
 
-import type { User } from "@/generated/prisma/client";
+import type { Message, User } from "@/generated/prisma/client";
 import { addUser, removeUser } from "@/app/chat/[id]/actions";
 import { useState } from "react";
 import { FaCrown } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
 import { createDirect } from "@/app/chat/actions";
 import { useRouter } from "next/navigation";
+import { socket } from "@/lib/socket";
 import Btn from "../ui/Btn";
 import Image from "next/image";
 
@@ -18,7 +19,7 @@ interface UserCardProps {
   owner?: boolean;
   isPublic?: boolean;
   closeModal?: () => void;
-  forwarding?: boolean;
+  forwarding?: Message;
 }
 
 function UserCard({
@@ -50,7 +51,18 @@ function UserCard({
   async function handleMessage() {
     setLoading(true);
     if (forwarding) {
-      //TODO: finish forwarding
+      socket.emit(
+        "message",
+        forwarding.message,
+        [session?.user.id, user.id].sort().join(""),
+        undefined,
+        {
+          userId: forwarding.userId,
+          channelId: forwarding.chatId,
+          messageId: forwarding.id,
+          date: forwarding.createdAt.toLocaleDateString(),
+        },
+      );
     } else {
       await createDirect(user.id);
     }
@@ -60,7 +72,7 @@ function UserCard({
   }
 
   return (
-    <div className="relative flex gap-x-3 items-center">
+    <div className="relative flex gap-x-3 items-center group/user">
       <Image
         src={user.image || "/avatar.svg"}
         alt="Avatar"
@@ -104,7 +116,7 @@ function UserCard({
       {!channelId && (
         <Btn
           text={loading ? "Loading..." : forwarding ? "Send" : "Message"}
-          styles="right-0 absolute text-sm py-0.5 px-2"
+          styles={`right-0 absolute text-sm py-0.5 px-2 ${forwarding && "opacity-0! group-hover/user:opacity-100! transition-all!"}`}
           onclick={handleMessage}
           primary
         />

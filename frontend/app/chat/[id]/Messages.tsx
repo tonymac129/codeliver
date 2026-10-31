@@ -17,6 +17,8 @@ export type MessageType = MessageT & {
   reactions?: Reaction[];
   replyMessage?: (MessageT & { user: User }) | null;
   threads?: MessageT[];
+  originalUser?: User;
+  originalChannel?: Chat;
 };
 
 interface MessagesProps {
@@ -25,6 +27,7 @@ interface MessagesProps {
   chat: Chat;
   isUser: boolean;
   otherUser?: User;
+  highlightedId?: string;
 }
 
 function Messages({
@@ -33,9 +36,12 @@ function Messages({
   chat,
   isUser,
   otherUser,
+  highlightedId,
 }: MessagesProps) {
   const [replying, setReplying] = useState<MessageT | null>(null);
-  const [highlighted, setHighlighted] = useState<string | null>(null);
+  const [highlighted, setHighlighted] = useState<string | null>(
+    highlightedId || null,
+  );
   const [displayedMessages, setDisplayedMessages] =
     useState<MessageType[]>(messages);
   const messageRef = useRef<HTMLDivElement>(null);
@@ -120,13 +126,16 @@ function Messages({
                 highlighted={highlighted}
                 setHighlighted={setHighlighted}
                 header={
-                  i === 0 || message.replyId
+                  i === 0 ||
+                  (message.replyId
                     ? true
-                    : false ||
-                      new Date(message.createdAt).getTime() -
-                        new Date(displayedMessages[i - 1].createdAt).getTime() >
-                        600000 ||
-                      displayedMessages[i - 1].userId !== message.userId
+                    : message.originalChannel
+                      ? true
+                      : false) ||
+                  new Date(message.createdAt).getTime() -
+                    new Date(displayedMessages[i - 1].createdAt).getTime() >
+                    600000 ||
+                  displayedMessages[i - 1].userId !== message.userId
                 }
               />
             </div>

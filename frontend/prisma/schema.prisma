@@ -27,8 +27,9 @@ model User {
   accounts      Account[]
   messages      Message[]
   chats         Chat[]
-  ownedChats    Chat[]     @relation("owner")
+  ownedChats    Chat[]     @relation(name: "owner")
   feedback      Feedback[]
+  forwarded     Message[]  @relation(name: "forward")
 
   @@unique([email])
   @@map("user")
@@ -108,25 +109,32 @@ model Chat {
   users           User[]
   isDirectMessage Boolean   @default(false)
   dmId            String?   @unique
+  forwarded       Message[] @relation(name: "forward")
 }
 
 model Message {
-  id            String     @id @default(uuid())
-  message       String
-  userId        String
-  user          User       @relation(fields: [userId], references: [id])
-  chatId        String
-  chat          Chat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  edited        Boolean    @default(false)
-  replyId       String?
-  replyMessage  Message?   @relation(name: "reply", fields: [replyId], references: [id])
-  replies       Message[]  @relation(name: "reply")
-  threadId      String?
-  threadMessage Message?   @relation(name: "thread", fields: [threadId], references: [id])
-  threads       Message[]  @relation(name: "thread")
-  reactions     Reaction[]
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  id                String     @id @default(uuid())
+  message           String
+  userId            String
+  user              User       @relation(fields: [userId], references: [id])
+  chatId            String
+  chat              Chat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  edited            Boolean    @default(false)
+  replyId           String?
+  replyMessage      Message?   @relation(name: "reply", fields: [replyId], references: [id])
+  replies           Message[]  @relation(name: "reply")
+  threadId          String?
+  threadMessage     Message?   @relation(name: "thread", fields: [threadId], references: [id])
+  threads           Message[]  @relation(name: "thread")
+  reactions         Reaction[]
+  originalUserId    String?
+  originalUser      User?      @relation(fields: [originalUserId], references: [id], name: "forward")
+  originalChannelId String?
+  originalChannel   Chat?      @relation(name: "forward", fields: [originalChannelId], references: [id])
+  originalMessageId String?
+  originalDate      String? //TODO: should use a self relation for forwarding but oh well
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
 }
 
 model Reaction {
@@ -135,6 +143,8 @@ model Reaction {
   users     String[]
   messageId String
   message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@unique([emoji, messageId])
 }
 
 model Feedback {

@@ -91,3 +91,31 @@ export async function transferOwnership(channelId: string, userId: string) {
     console.error("Error: " + err);
   }
 }
+
+export async function sendMessage() {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (session) {
+      await prisma.message.create({
+        data: {
+          message: "hello this will probably be forwarded?",
+          userId: session.user.id,
+          chatId: "931a4969-0cdd-4983-834b-ad96a22ea3ec",
+          originalUserId: session.user.id,
+          originalChannelId: "04a46961-e73c-46c5-8a38-2ad3d959628e",
+          originalMessageId: "9cebc777-4025-44d1-bc96-954f64fd245c",
+          originalDate: "10/30/26",
+          reactions: {
+            create: {
+              emoji: "💀",
+              users: ["HgnXJkt5u0js1m4Jm4avi8PKhy7ZrbCJ"],
+            },
+          },
+        },
+      });
+      revalidatePath("/chat/04a46961-e73c-46c5-8a38-2ad3d959628e");
+    }
+  } catch (err) {
+    console.error("Error: " + err);
+  }
+}

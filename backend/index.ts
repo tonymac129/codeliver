@@ -62,7 +62,8 @@ io.on("connection", async (socket) => {
     console.log(`User ${userData.name} left channel ${channelId}`);
   });
 
-  socket.on("message", async (message, chatId, replyId?) => {
+  socket.on("message", async (message, chatId, replyId?, original?) => {
+    console.log(message, chatId, replyId, original);
     const existingChat = await prisma.chat.upsert({
       where: { id: chatId },
       update: {},
@@ -74,6 +75,10 @@ io.on("connection", async (socket) => {
         userId: userData.id,
         chatId: existingChat.id,
         replyId,
+        originalUserId: original.userId || undefined,
+        originalChannelId: original.channelId || undefined,
+        originalMessageId: original.messageId || undefined,
+        originalDate: original.date || undefined,
       },
       include: {
         user: true,
@@ -83,6 +88,49 @@ io.on("connection", async (socket) => {
       },
     });
     io.to(`channel:${existingChat.id}`).emit("message", newMessage);
+  });
+
+  socket.on("edit", async (messageId, edit) => {
+    const edited = await prisma.message.update({
+      where: { id: messageId, userId: userData.id },
+      data: { message: edit, edited: true },
+    });
+    console.log("edited", edited);
+    io.to(`channel:${edited.chatId}`).emit("edit"); //TODO: make frontend listen for this and refresh
+  });
+
+  socket.on("delete", async (messageId) => {
+    console.log(messageId);
+    const deleted = await prisma.message.delete({
+      where: { id: messageId, userId: userData.id },
+    });
+    io.to(`channel:${deleted.chatId}`).emit("delete"); //TODO: make frontend listen for this and refresh
+  });
+
+  socket.on("react", async (messageId, emoji) => {
+    console.log(messageId, emoji);
+    const users = await prisma.reaction.findUnique({
+      where: { emoji_messageId: { emoji, messageId } },
+    });
+    if (users) {
+      users.users = users.users.includes(userData.id)
+        ? users.users.filter((u) => u !== userData.id)
+        : [...users.users, userData.id];
+    }
+    const updated = await prisma.message.update({
+      where: { id: messageId },
+      data: {
+        reactions: {
+          upsert: {
+            where: { emoji_messageId: { emoji, messageId } },
+            create: { emoji, users: [userData.id] },
+            update: { users: users!.users },
+          },
+        },
+      },
+    });
+    console.log(updated);
+    io.to(`channel:${updated.chatId}`).emit("react"); //TODO: make this reflect on frontend too
   });
 
   socket.on("disconnect", () => {

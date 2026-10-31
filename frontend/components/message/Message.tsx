@@ -2,10 +2,12 @@
 
 import type { Message as MessageT } from "@/generated/prisma/client";
 import type { MessageType } from "@/app/chat/[id]/Messages";
-import { MdAddReaction } from "react-icons/md";
+import { MdAddReaction, MdSend } from "react-icons/md";
 import { HiOutlineReply } from "react-icons/hi";
 import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
+import { FaUser } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import Reaction from "./Reaction";
 import Emoji from "../ui/Emoji";
 import Modal from "../ui/Modal";
@@ -13,6 +15,13 @@ import Image from "next/image";
 import Bar from "./Bar";
 import Feedback from "../user/Feedback";
 import Forward from "../modals/Forward";
+import Link from "next/link";
+import Warning from "../modals/Warning";
+import { socket } from "@/lib/socket";
+import Input from "../ui/Input";
+
+const headerStyles =
+  "text-gray-700 dark:text-gray-300 gap-x-3 text-sm flex items-center w-fit";
 
 interface MessageProps {
   message: MessageType;
@@ -34,11 +43,30 @@ function Message({
   header,
 }: MessageProps) {
   const [reporting, setReporting] = useState<boolean>(false);
-  const [forwarding, setForwarding] = useState<boolean>(false);
+  const [forwarding, setForwarding] = useState<MessageType | null>(null);
+  const [edit, setEdit] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const router = useRouter();
   const isHighlighted = highlighted === message.id;
   const currentTime = new Date();
   const created = new Date(message.createdAt);
   const timeString = `${created.getHours() % 12 || "12"}:${created.getMinutes().toString().padStart(2, "0")} ${created.getHours() > 11 ? "PM" : "AM"}`;
+
+  function handleReact(emoji: string) {
+    socket.emit("react", message.id, emoji);
+  }
+
+  function handleEdit(e?: React.SubmitEvent) {
+    e?.preventDefault();
+    if (edit && edit.trim().length > 0 && edit !== message.message) {
+      socket.emit("edit", message.id, edit);
+      setEdit(null);
+    }
+  }
+
+  function handleDelete() {
+    socket.emit("delete", message.id);
+  }
 
   useEffect(() => {
     if (highlighted === message.id) {
@@ -48,13 +76,25 @@ function Message({
     }
   }, [highlighted, message.id, setHighlighted]);
 
-  return (
+  return edit !== null ? (
+    <form
+      onSubmit={handleEdit}
+      className="py-2 px-5 hover:bg-gray-300/50 dark:hover:bg-[#0D111C]"
+    >
+      <Input
+        onblur={handleEdit}
+        placeholder="Your edited message here"
+        value={edit}
+        setValue={(e) => setEdit(e)}
+      />
+    </form>
+  ) : (
     <div
       className={`py-2 px-5 group flex flex-col gap-y-1 relative ${isHighlighted ? "bg-gray-300 dark:bg-gray-900" : "hover:bg-gray-300/50 dark:hover:bg-[#0D111C]"} ${header && "mt-3"}`}
     >
       {message.replyMessage && (
         <div
-          className="text-gray-700 dark:text-gray-300 gap-x-3 text-sm flex items-center pl-6 cursor-pointer w-fit"
+          className={headerStyles + " pl-6 cursor-pointer"}
           onClick={() => setHighlighted(message.replyMessage!.id)}
         >
           <HiOutlineReply size={20} className="rotate-y-180" />
@@ -104,10 +144,64 @@ function Message({
               </div>
             </div>
           )}
+          {message.originalUser && message.originalChannel && (
+            <>
+              <div className={headerStyles}>
+                <MdSend size={18} />
+                <div>
+                  Forwarded from{" "}
+                  <Link
+                    href={
+                      message.originalChannel.isDirectMessage
+                        ? ""
+                        : `/chat/${message.originalChannelId}`
+                    }
+                    className="bg-blue-200 dark:bg-blue-950 p-1 rounded"
+                  >
+                    {message.originalChannel.isDirectMessage
+                      ? "Direct message"
+                      : `#${message.originalChannel.name}`}
+                  </Link>
+                </div>
+              </div>
+              <div className={headerStyles}>
+                {message.originalUser.image ? (
+                  <Image
+                    src={message.originalUser.image}
+                    alt="User avatar"
+                    width={20}
+                    height={20}
+                    className="rounded-full"
+                  />
+                ) : (
+                  <FaUser size={20} />
+                )}{" "}
+                {message.originalUser.name} on {message.originalDate}:
+              </div>
+            </>
+          )}
           <div
-            className={`text-gray-700 dark:text-gray-300 ${!header && "pl-15.5"}`}
+            className={`text-gray-700 dark:text-gray-300 ${!header && "pl-15.5"} ${message.originalChannel && "border-l-2 border-gray-700 hover:bg-gray-300 dark:hover:bg-gray-800/50 cursor-pointer px-3 py-1.5 rounded-r"}`}
+            title={
+              message.originalChannel ? "Go to forwarded message" : undefined
+            }
+            onClick={() =>
+              message.originalChannelId
+                ? router.push(
+                    `/chat/${message.originalChannelId}?h=${message.originalMessageId}`,
+                  )
+                : undefined
+            }
           >
-            {message.message}
+            {message.message}{" "}
+            {message.edited && (
+              <span
+                className="text-xs text-gray-600 dark:text-gray-400 pl-0.5"
+                title="This message has been edited1"
+              >
+                (edited)
+              </span>
+            )}
           </div>
           {message.reactions && message.reactions.length > 0 && (
             <div className="flex gap-2 flex-wrap">
@@ -115,12 +209,13 @@ function Message({
                 return (
                   <Reaction
                     key={i}
+                    messageId={message.id}
                     reaction={reaction}
                     reacted={reaction.users.includes(userId)}
                   />
                 );
               })}
-              <Emoji onselect={(emoji) => console.log(emoji)}>
+              <Emoji onselect={(emoji) => handleReact(emoji)}>
                 <div className="px-2 py-1 text-gray-700 dark:text-gray-300 rounded border border-gray-700 cursor-pointer hover:bg-gray-400 dark:hover:bg-gray-800 text-base">
                   <MdAddReaction size={20} />
                 </div>
@@ -134,6 +229,9 @@ function Message({
           index={index}
           setReporting={setReporting}
           setForwarding={setForwarding}
+          setEdit={setEdit}
+          setDeleting={setDeleting}
+          isOwner={userId === message.userId}
         />
       </div>
       <AnimatePresence>
@@ -145,8 +243,25 @@ function Message({
       </AnimatePresence>
       <AnimatePresence>
         {forwarding && (
-          <Modal closeModal={() => setForwarding(false)}>
-            <Forward />
+          <Modal closeModal={() => setForwarding(null)}>
+            <Forward forwarding={forwarding} />
+          </Modal>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {deleting && (
+          <Modal closeModal={() => setDeleting(false)}>
+            <Warning
+              title="Message deletion confirmation"
+              loading={false}
+              confirm={handleDelete}
+              cancel={() => setDeleting(false)}
+            >
+              <p>
+                Are you sure you want to delete this message? This action is
+                permanent and irreversible.
+              </p>
+            </Warning>
           </Modal>
         )}
       </AnimatePresence>
